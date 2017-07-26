@@ -44,5 +44,9 @@
 	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/Instalables/jar_files/jsr311-api-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/Instalables/jar_files/jstl-1.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/Instalables/jar_files/stax-api-1.0-2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/cursos/desarrollo-app-tecnologias-web/recursos/lib- jcalendar/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/cursos/desarrollo-app-tecnologias-web/recursos/lib- jcalendar/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/cursos/desarrollo-app-tecnologias-web/recursos/lib- jcalendar/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vero/Desktop/cursos/desarrollo-app-tecnologias-web/recursos/lib- jcalendar/junit-4.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
