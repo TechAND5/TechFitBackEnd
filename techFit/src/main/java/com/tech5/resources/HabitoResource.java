@@ -37,7 +37,7 @@ public class HabitoResource extends JSONService{
 		@GET
 		@Path("/{uid}")
 		@Produces(MediaType.APPLICATION_JSON)
-		public List<Habito> getHabitoList(int uid, @HeaderParam("token") String token){
+		public List<Habito> getHabitoList(int uid){
 			List<Habito> listaProyectos = hDAO.getUserHabito(uid);
 			Response.status(200).entity(listaProyectos).build();
 		
