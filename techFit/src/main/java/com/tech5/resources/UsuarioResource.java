@@ -1,4 +1,4 @@
-package com.Tech5.resources;
+package com.tech5.resources;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

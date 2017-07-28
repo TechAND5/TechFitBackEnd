@@ -52,6 +52,5 @@ public class Dia {
 	public void setHid(int hid) {
 		this.hid = hid;
 	}
-	
-	//Metodos
+
 }

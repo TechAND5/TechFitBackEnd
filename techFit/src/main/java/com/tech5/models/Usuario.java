@@ -22,7 +22,6 @@ public class Usuario {
 		this.apellido = apellido;
 	}
 
-	//Metodos
 	public int getUid() {
 		return uid;
 	}
