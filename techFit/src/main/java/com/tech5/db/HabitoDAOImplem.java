@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.tech5.models.Habito;
+import com.tech5.models.Usuario;
 
 public class HabitoDAOImplem extends HabitoDAO {
 private static Logger logger = Logger.getLogger("UsuarioBBDAOImpl");
@@ -62,6 +63,36 @@ private static Logger logger = Logger.getLogger("UsuarioBBDAOImpl");
 //		}
 
 		return listADevolver;
+	}
+
+	@Override
+	public List<Habito> getUserHabito(Usuario user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Habito> getHabitoList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delHabito(int hid) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean insertHabito(Habito habito) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateProyecto(Habito habito) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

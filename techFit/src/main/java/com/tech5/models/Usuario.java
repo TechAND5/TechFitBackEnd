@@ -7,28 +7,28 @@ public class Usuario {
 	private int uid;
 	private String email;
 	private String password;
-	private String nick;
-	private String name;
+	private String username;
+	private String nombre;
 	private String apellido;
 
 	//Constructor
-	public Usuario(int uid, String email, String password, String nick, String name, String apellido) {
+	public Usuario(int uid, String email, String password, String username, String nombre, String apellido) {
 		super();
 		this.uid = uid;
 		this.email = email;
 		this.password = password;
-		this.nick = nick;
-		this.name = name;
+		this.username=username;
+		this.nombre = nombre;
 		this.apellido = apellido;
 	}
 
 
-	public Usuario(int uid, String email, String nick, String name, String apellido) {
+	public Usuario(int uid, String email, String username, String nombre, String apellido) {
 		super();
 		this.uid = uid;
 		this.email = email;
-		this.nick = nick;
-		this.name = name;
+		this.username=username;
+		this.nombre = nombre;
 		this.apellido = apellido;
 	}
 
@@ -57,20 +57,14 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public String getNick() {
-		return nick;
+	
+
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getApellido() {
@@ -79,5 +73,15 @@ public class Usuario {
 
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
+	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

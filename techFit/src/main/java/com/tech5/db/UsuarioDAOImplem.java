@@ -23,7 +23,7 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 	}
 
 	@Override
-	public Usuario getUsuario(String nickname, String password) {
+	public Usuario getUsuario(String username, String password) {
 		Usuario usuarioADevolver = null;
 
 		try {
@@ -32,13 +32,13 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 			PreparedStatement pstm =null;
 			// ordenes sql
 			if (password == null) {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.nickname=? LIMIT 1;";
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? LIMIT 1;";
 				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, nickname);
+				pstm.setString(1, username);
 			} else {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.nickname=? AND password=? LIMIT 1;";
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? AND password=? LIMIT 1;";
 				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, nickname);
+				pstm.setString(1, username);
 				pstm.setString(2, password);				
 			}
 
@@ -49,7 +49,7 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 						rs.getInt("uId"),
 						rs.getString("email"),
 						(password == null)?"":rs.getString("password"),
-						rs.getString("nickname"),
+						rs.getString("username"),
 						rs.getString("nombre"),
 						rs.getString("apellido")
 						);
@@ -86,7 +86,7 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 				usuarioADevolver = new Usuario(
 						rs.getInt("uId"),
 						rs.getString("email"),
-						rs.getString("nickname"),
+						rs.getString("username"),
 						rs.getString("nombre"),
 						rs.getString("apellido")
 						);
