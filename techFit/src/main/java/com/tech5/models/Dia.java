@@ -7,7 +7,7 @@ public class Dia {
 	//Atributos
 	private int did;
 	private String diaSemana;
-	private Date fecha;
+	private Date fechaActual;
 	private int estado;
 	private int hid;
 	
@@ -16,7 +16,7 @@ public class Dia {
 		super();
 		this.did = did;
 		this.diaSemana = diaSemana;
-		this.fecha = fecha;
+		this.fechaActual = fecha;
 		this.estado = estado;
 		this.hid = hid;
 	}
@@ -35,10 +35,10 @@ public class Dia {
 		this.diaSemana = diaSemana;
 	}
 	public Date getFecha() {
-		return fecha;
+		return fechaActual;
 	}
 	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+		this.fechaActual = fecha;
 	}
 	public int getEstado() {
 		return estado;
