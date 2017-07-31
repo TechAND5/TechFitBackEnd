@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.tech5.models.Dia;
+import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
 
@@ -24,8 +27,8 @@ private static Logger logger = Logger.getLogger("DiaDAOImplem");
 	}
 		
 		@Override
-		public Dia getDia(int did, String diaSemana, Date fechaActual, int estado, int habito, int usuario, PreparedStatement pstm, Connection conn) {
-			Usuario usuarioADevolver = null;
+		public List<Dia> getDiaList(){
+			List<Dia> listADevolver =new ArrayList<Dia>();
 
 			try {
 
@@ -111,18 +114,25 @@ private static Logger logger = Logger.getLogger("DiaDAOImplem");
 		}
 		*/
 
-		@Override
-		public boolean insertDia(Dia dia) {
-			// TODO Auto-generated method stub
-			return false;
-		
-
-		@Override
-		public boolean updateDia(Dia) {
-			// TODO Auto-generated method stub
-			return false;
-		
-		}
 	
 		
 
+
+
+		@Override
+		public List<Dia> getDiaList(Habito habit) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Dia getDia(int did) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean updateDia(Dia dia) {
+			// TODO Auto-generated method stub
+			return false;
+		}
