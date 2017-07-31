@@ -15,7 +15,8 @@ public class DAO {
 			try{
 				Context initContext = new InitialContext();
 				Context envContext = (Context) initContext.lookup("java:/comp/env"); 
-				this.datasource = (DataSource)envContext.lookup("jdbc/INSERTAR_BBDD_NOMBRE");
+
+				this.datasource = (DataSource)envContext.lookup("jdbc/techFit");
 			}catch (Exception e) {
 				logger.info("Error al instanciar Datasource!!!!");
 				e.printStackTrace();

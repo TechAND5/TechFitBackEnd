@@ -2,8 +2,10 @@ package com.tech5.db;
 
 import java.util.logging.Logger;
 
-public class DiaDAOImplem {
-private static Logger logger = Logger.getLogger("UsuarioBBDAOImpl");
+
+public class DiaDAOImplem extends DiaDAO{
+
+private static Logger logger = Logger.getLogger("DiaDAOImplem");
 	
 	private static DiaDAOImplem instance = null;
 

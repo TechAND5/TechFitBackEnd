@@ -19,10 +19,13 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
-
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.tech5.db.DAOFactory;
 import com.tech5.db.UsuarioDAO;
+import com.tech5.models.Message;
+import com.tech5.models.Usuario;
+
+
 
 @Path("/authenticate")
 public class AuthService extends JSONService{
@@ -46,8 +49,8 @@ public class AuthService extends JSONService{
 			Message statusMessage = new Message("Username value is missing");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
 		}
-
-		UsuarioB user = null;
+		
+		Usuario user = null;
 		UsuarioDAO usuarioDAO;
 		try {
 			usuarioDAO = (UsuarioDAO) DAOFactory.getInstance().getDAO("usuario");
@@ -69,7 +72,7 @@ public class AuthService extends JSONService{
 
 		// Create the Claims, which will be the content of the JWT
 		JwtClaims claims = new JwtClaims();
-		claims.setIssuer("netmind.com"); // who creates the token and signs it
+		claims.setIssuer("tech5.com"); // who creates the token and signs it
 		claims.setExpirationTimeMinutesInTheFuture(10); // token will expire (10
 														// minutes from now)
 		claims.setGeneratedJwtId(); // a unique identifier for the token
@@ -87,7 +90,6 @@ public class AuthService extends JSONService{
 
 		jws.setKeyIdHeaderValue(senderJwk.getKeyId());
 		jws.setKey(senderJwk.getPrivateKey());
-
 		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 
 		String jwt = null;

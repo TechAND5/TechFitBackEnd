@@ -14,9 +14,9 @@ public class DAOFactory {
 		switch (daoType) {
 		case "usuario":
 			return (Object) UsuarioDAOImplem.getInstance();
-		case "proyecto":
+		case "habito":
 			return (Object) HabitoDAOImplem.getInstance();
-		case "tarea":
+		case "dia":
 			return (Object) DiaDAOImplem.getInstance();
 		default:
 			return null;

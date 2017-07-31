@@ -11,10 +11,15 @@ public class Habito {
 	private int progreso;
 	private int estado;
 	private List<Dia> listaDias;
+
 	private Usuario usuario;
 
+
+
+	private int uid;
+
 	//Constructor
-	public Habito(int hid, String titulo, String descripcion, int progreso, int estado, List<Dia> listaDias, Usuario usuario) {
+	public Habito(int hid, String titulo, String descripcion, int progreso, int estado, List<Dia> listaDias, int uid) {
 		super();
 		this.hid = hid;
 		this.titulo = titulo;
@@ -22,7 +27,7 @@ public class Habito {
 		this.progreso = progreso;
 		this.estado = estado;
 		this.listaDias = listaDias;
-		this.usuario = usuario;
+		this.uid = uid;
 	}
 
 	//Getters&Setters
@@ -74,11 +79,15 @@ public class Habito {
 		this.listaDias = listaDias;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public int getUid() {
+		return uid;
+	}
+
+	public void setUid(int uid) {
+		this.uid = uid;
 	}
 
 	
-	//Metodos
-	
+
+
 }

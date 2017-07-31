@@ -1,5 +1,6 @@
 package com.tech5.resources;
 
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,7 +13,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
+
+
+
+import java.util.List;
+
+import javax.ws.rs.core.Response.Status;
+
 import com.tech5.models.Habito;
+import com.tech5.models.Message;
 import com.tech5.db.DAOFactory;
 import com.tech5.db.HabitoDAO;
 
@@ -29,12 +39,16 @@ public class HabitoResource extends JSONService{
 			return elHabito;
 		}
 		
+		//Obtener dlista de habitos del usuario:
 		@GET
 		@Path("/{uid}")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getHabitoList(int uid, @HeaderParam("token") String token){
-			Response elHabito = null;
-			return elHabito;
+		public List<Habito> getHabitoList(int uid){
+			List<Habito> listaProyectos = hDAO.getUserHabito(uid);
+			Response.status(200).entity(listaProyectos).build();
+		
+			return listaProyectos;
+
 		}
 		
 		//POST, PUT, DELETE:

@@ -3,8 +3,10 @@ package com.tech5.db;
 import java.util.logging.Logger;
 
 
-public class UsuarioDAOImplem {
-private static Logger logger = Logger.getLogger("UsuarioBBDAOImpl");
+
+public class UsuarioDAOImplem extends UsuarioDAO{
+
+private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 	
 	private static UsuarioDAOImplem instance = null;
 
