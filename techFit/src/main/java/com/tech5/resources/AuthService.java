@@ -19,11 +19,10 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
-import com.netmind.db.DAOFactory;
-import com.netmind.db.UsuarioDAO;
-import com.netmind.models.Message;
-import com.netmind.models.UsuarioB;
+
 import com.sun.jersey.api.client.ClientResponse.Status;
+import com.tech5.db.DAOFactory;
+import com.tech5.db.UsuarioDAO;
 
 @Path("/authenticate")
 public class AuthService extends JSONService{
