@@ -6,7 +6,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-public class DAO {
+public abstract class DAO {
 		private static Logger logger = Logger.getLogger("DAO");
 
 		public DataSource datasource;

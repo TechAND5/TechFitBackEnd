@@ -6,17 +6,27 @@ public class Usuario {
 	//Atributos
 	private int uid;
 	private String email;
-	private String pass;
+	private String password;
 	private String nick;
 	private String name;
 	private String apellido;
 
 	//Constructor
-	public Usuario(int uid, String email, String pass, String nick, String name, String apellido) {
+	public Usuario(int uid, String email, String password, String nick, String name, String apellido) {
 		super();
 		this.uid = uid;
 		this.email = email;
-		this.pass = pass;
+		this.password = password;
+		this.nick = nick;
+		this.name = name;
+		this.apellido = apellido;
+	}
+
+
+	public Usuario(int uid, String email, String nick, String name, String apellido) {
+		super();
+		this.uid = uid;
+		this.email = email;
 		this.nick = nick;
 		this.name = name;
 		this.apellido = apellido;
@@ -40,11 +50,11 @@ public class Usuario {
 	}
 
 	public String getPass() {
-		return pass;
+		return password;
 	}
 
-	public void setPass(String pass) {
-		this.pass = pass;
+	public void setPass(String password) {
+		this.password = password;
 	}
 
 	public String getNick() {

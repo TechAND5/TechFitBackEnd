@@ -41,12 +41,17 @@ public class AuthService extends JSONService{
 		logger.info("Authenticating User Credentials...:"+username+":"+password);
 
 		if (username == null) {
-			Message statusMessage = new Message("Username value is missing");
+			Message statusMessage = new Message();
+			statusMessage.setStatus(Status.PRECONDITION_FAILED.getStatusCode());
+			statusMessage.setBody("Username value is missing!!!");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
-		}
+			
+					}
 
 		if (password == null) {
-			Message statusMessage = new Message("Username value is missing");
+			Message statusMessage = new Message();
+			statusMessage.setStatus(Status.PRECONDITION_FAILED.getStatusCode());
+			statusMessage.setBody("Password value is missing!!!");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
 		}
 		
@@ -61,7 +66,9 @@ public class AuthService extends JSONService{
 		}
 
 		if (user == null) {
-			Message statusMessage = new Message("Username value is missing");
+			Message statusMessage = new Message();
+			statusMessage.setStatus(Status.FORBIDDEN.getStatusCode());
+			statusMessage.setBody("Access Denied for this functionality !!!");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
 		}
 
@@ -73,7 +80,7 @@ public class AuthService extends JSONService{
 		// Create the Claims, which will be the content of the JWT
 		JwtClaims claims = new JwtClaims();
 		claims.setIssuer("tech5.com"); // who creates the token and signs it
-		claims.setExpirationTimeMinutesInTheFuture(10); // token will expire (10
+		claims.setExpirationTimeMinutesInTheFuture(20); // token will expire (10
 														// minutes from now)
 		claims.setGeneratedJwtId(); // a unique identifier for the token
 		claims.setIssuedAtToNow(); // when the token was issued/created (now)
