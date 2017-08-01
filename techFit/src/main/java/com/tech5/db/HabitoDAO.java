@@ -2,6 +2,7 @@
 package com.tech5.db;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -9,11 +10,12 @@ import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
 public abstract class HabitoDAO extends DAO{
-	public abstract List<Habito> getUserHabito(Usuario user); 
-	public abstract List<Habito> getHabitoList();
-	public abstract boolean delHabito(int hid);
-	public abstract boolean insertHabito(Habito habito) throws Exception;
-	public abstract boolean updateProyecto(Habito habito);
+	public abstract Habito getHabito(int hid);
+	public abstract List<Habito> getHabitoxUser(Usuario user); 
+	/*public abstract List<Habito> getHabitoList();*/
+	public abstract boolean insertHabito(Habito newHabito) throws Exception;
+	public abstract boolean updateProyecto(int hid,Habito habito) throws  Exception;
+	public abstract boolean delHabito(int hid) throws Exception;
 
 }
 

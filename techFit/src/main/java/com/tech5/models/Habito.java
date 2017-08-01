@@ -1,7 +1,9 @@
 
 package com.tech5.models;
 
-import java.util.List;
+
+import java.util.Date;
+
 
 
 
@@ -11,23 +13,24 @@ public class Habito {
 	private int hid;
 	private String titulo;
 	private String descripcion;
+	private Date fechaI;
 	private int progreso;
 	private int estado;
-	private List<Dia> listaDias;
+	
 
 	//Constructor
 	public Habito(){}
 	
 	
-	public Habito(int hid, String titulo, String descripcion, int progreso, int estado, List<Dia> listaDias) {
+	public Habito(int hid, String titulo, String descripcion,Date fechaI, int progreso, int estado) {
 		super();
 		this.hid = hid;
 		this.titulo = titulo;
 		this.descripcion = descripcion;
+		this.fechaI=fechaI;
 		this.progreso = progreso;
 		this.estado = estado;
-		this.listaDias = listaDias;
-		
+				
 	}
 
 	//Getters&Setters
@@ -71,13 +74,14 @@ public class Habito {
 		this.estado = estado;
 	}
 
-	public List<Dia> getListaDias() {
-		return listaDias;
+
+	public Date getFechaI() {
+		return fechaI;
 	}
 
-	public void setListaDias(List<Dia> listaDias) {
-		this.listaDias = listaDias;
-	}
 
+	public void setFechaI(Date fechaI) {
+		this.fechaI = fechaI;
+	}
 	
 }

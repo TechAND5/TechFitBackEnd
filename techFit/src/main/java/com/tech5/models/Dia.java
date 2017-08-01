@@ -1,21 +1,22 @@
 package com.tech5.models;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Dia {
 
 	//Atributos
 	private int did;
-	private String diaSemana;
-	private Date fechaActual;
+	//private Calendar diaSemana;
+	private Calendar fechaActual;
 	private int estado;
 	private int hid;
 	
 	//Constructor
-	public Dia(int did, String diaSemana, Date fecha, int estado, int hid) {
+	public Dia(int did,  Calendar fecha, int estado, int hid) {
 		super();
 		this.did = did;
-		this.diaSemana = diaSemana;
+		//this.diaSemana = diaSemana;
 		this.fechaActual = fecha;
 		this.estado = estado;
 		this.hid = hid;
@@ -28,16 +29,16 @@ public class Dia {
 	public void setDid(int did) {
 		this.did = did;
 	}
-	public String getDiaSemana() {
-		return diaSemana;
-	}
-	public void setDiaSemana(String diaSemana) {
-		this.diaSemana = diaSemana;
-	}
-	public Date getFecha() {
+	//public Calendar getDiaSemana() {
+	///	return diaSemana;
+	//}
+	//public void setDiaSemana(Calendar diaSemana) {
+	//	this.diaSemana = diaSemana;
+	//}
+	public Calendar getFecha() {
 		return fechaActual;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(Calendar fecha) {
 		this.fechaActual = fecha;
 	}
 	public int getEstado() {

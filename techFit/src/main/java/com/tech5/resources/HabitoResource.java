@@ -44,7 +44,7 @@ public class HabitoResource extends JSONService{
 		@Path("/{uid}")
 		@Produces(MediaType.APPLICATION_JSON)
 		public List<Habito> getHabitoList(int uid){
-			List<Habito> listaProyectos = hDAO.getUserHabito(uid);
+			List<Habito> listaProyectos = hDAO.getHabitoxUser(uid);
 			Response.status(200).entity(listaProyectos).build();
 		
 			return listaProyectos;
