@@ -8,12 +8,10 @@ import java.util.logging.Logger;
 
 import com.tech5.models.Usuario;
 
+public class UsuarioDAOImplem extends UsuarioDAO {
 
+	private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 
-public class UsuarioDAOImplem extends UsuarioDAO{
-
-private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
-	
 	private static UsuarioDAOImplem instance = null;
 
 	public static UsuarioDAOImplem getInstance() {
@@ -30,7 +28,7 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 		try {
 
 			Connection conn = datasource.getConnection();
-			PreparedStatement pstm =null;
+			PreparedStatement pstm = null;
 			// ordenes sql
 			if (password == null) {
 				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? LIMIT 1;";
@@ -40,20 +38,15 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? AND password=? LIMIT 1;";
 				pstm = conn.prepareStatement(sql);
 				pstm.setString(1, username);
-				pstm.setString(2, password);				
+				pstm.setString(2, password);
 			}
 
 			ResultSet rs = pstm.executeQuery();
-			
+
 			if (rs.next()) {
-				usuarioADevolver = new Usuario(
-						rs.getInt("uId"),
-						rs.getString("email"),
-						(password == null)?"":rs.getString("password"),
-						rs.getString("username"),
-						rs.getString("nombre"),
-						rs.getString("apellido")
-						);
+				usuarioADevolver = new Usuario(rs.getInt("uId"), rs.getString("email"),
+						(password == null) ? "" : rs.getString("password"), rs.getString("username"),
+						rs.getString("nombre"), rs.getString("apellido"));
 			}
 
 			pstm.close();
@@ -72,8 +65,8 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 		Usuario usuarioADevolver = null;
 		try {
 			Connection conn = datasource.getConnection();
-			PreparedStatement pstm =null;
-			
+			PreparedStatement pstm = null;
+
 			// ordenes sql
 			String sql = "SELECT u.* FROM techfit.usuario u WHERE u.uId=? LIMIT 1";
 			pstm = conn.prepareStatement(sql);
@@ -81,16 +74,9 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 
 			ResultSet rs = pstm.executeQuery();
 
-			
-
 			if (rs.next()) {
-				usuarioADevolver = new Usuario(
-						rs.getInt("uId"),
-						rs.getString("email"),
-						rs.getString("username"),
-						rs.getString("nombre"),
-						rs.getString("apellido")
-						);
+				usuarioADevolver = new Usuario(rs.getInt("uId"), rs.getString("email"), rs.getString("username"),
+						rs.getString("nombre"), rs.getString("apellido"));
 			}
 
 			pstm.close();
@@ -104,15 +90,65 @@ private static Logger logger = Logger.getLogger("UsuarioDAOImplem");
 	}
 
 	@Override
-	public boolean insertUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean insertUsuario(Usuario nuevoUsuario) {
+		boolean exito = false;
+
+		try {
+
+			Connection conn = this.datasource.getConnection();
+			PreparedStatement pstm = null;
+			// ordenes sql
+			String sql = "INSERT INTO u.* FROM techfit.usuario u VALUES(NULL,?,?,?,?,?)";
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, nuevoUsuario.getEmail());
+			pstm.setString(2, nuevoUsuario.getPass());
+			pstm.setString(3, nuevoUsuario.getUsername());
+			pstm.setString(4, nuevoUsuario.getNombre());
+			pstm.setString(5, nuevoUsuario.getApellido());
+
+			int rs = pstm.executeUpdate();
+
+			pstm.close();
+			conn.close();
+			logger.info("Inserción de usuario exitosa");
+			exito = rs > 0 ? true : false;
+
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD desde insertUsuario:" + e.getMessage());
+			exito = false;
+		}
+		return exito;
 	}
 
 	@Override
 	public boolean updateUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean exito = false;
+
+		try {
+
+			Connection conn = this.datasource.getConnection();
+			PreparedStatement pstm = null;
+			// ordenes sql
+			String sql = "UPDATE techfit.usuario u SET u.email=?, u.pass=?, u.username=?, u.nombre=?, u.apellido=? WHERE u.uid=?";
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, "email");
+			pstm.setString(2, "pass");
+			pstm.setString(3, "username");
+			pstm.setString(4, "nombre");
+			pstm.setString(5, "apellido");
+
+			int rs = pstm.executeUpdate();
+
+			pstm.close();
+			conn.close();
+			logger.info("Combio en usuario exitoso");
+			exito = rs > 0 ? true : false;
+
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD desde updateUsuario:" + e.getMessage());
+			exito = false;
+		}
+		return exito;
 	}
 
 }
