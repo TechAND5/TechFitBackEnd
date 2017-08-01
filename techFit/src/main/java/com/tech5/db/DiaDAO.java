@@ -10,7 +10,7 @@ import com.tech5.models.Usuario;
 
 public abstract class DiaDAO extends DAO {
 
-	public abstract List<Dia> getDiaList();//get lista
+	public abstract List<Dia> getDiaListxHabito(int hid);//get lista
 	public abstract Dia getDia(int did);//get dia por id
 	public abstract boolean updateDia(Dia dia); //put - actualizar dia
 

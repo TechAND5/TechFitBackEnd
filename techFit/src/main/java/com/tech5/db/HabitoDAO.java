@@ -14,7 +14,7 @@ public abstract class HabitoDAO extends DAO{
 	public abstract List<Habito> getHabitoxUser(Usuario user); 
 	/*public abstract List<Habito> getHabitoList();*/
 	public abstract boolean insertHabito(Habito newHabito) throws Exception;
-	public abstract boolean updateProyecto(int hid,Habito habito) throws  Exception;
+	public abstract boolean updateHabito(int hid,Habito habito) throws  Exception;
 	public abstract boolean delHabito(int hid) throws Exception;
 
 }

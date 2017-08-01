@@ -12,11 +12,10 @@ import com.tech5.models.Dia;
 import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
+public class DiaDAOImplem extends DiaDAO {
 
-public class DiaDAOImplem extends DiaDAO{
+	private static Logger logger = Logger.getLogger("DiaDAOImplem");
 
-private static Logger logger = Logger.getLogger("DiaDAOImplem");
-	
 	private static DiaDAOImplem instance = null;
 
 	public static DiaDAOImplem getInstance() {
@@ -25,114 +24,112 @@ private static Logger logger = Logger.getLogger("DiaDAOImplem");
 		}
 		return instance;
 	}
-		
-		@Override
-		public List<Dia> getDiaList(){
-			List<Dia> listADevolver =new ArrayList<Dia>();
 
+	@Override
+		public List<Dia> getDiaListxHabito(int unHid){
+			List<Dia> dialistADevolver =new ArrayList<Dia>();
 			try {
-
-				Connection conn = datasource.getConnection();
-				PreparedStatement pstm =null;
+			
+				Connection conn =  this.datasource.getConnection();
 				// ordenes sql
-				//if (password == null) {
-					String sql = "SELECT d.* FROM techfit.dia; d WHERE u.nickname=? LIMIT 1;";
-					pstm = conn.prepareStatement(sql);
-					int dia;
-					pstm.setInt(1, dia);
-				}
-			else {
-					String sql = "SELECT u.* FROM techfit.dia d WHERE d.dId=? AND password=? LIMIT 1;";
-					pstm = conn.prepareStatement(sql);
-					pstm.setInt(1, did);
-					// pstm.setString(2, password);				
-				}
-		
+				String sql = "SELECT d.* FROM techfit.dia d LEFT JOIN techfit.habito h ON d.habito=h.hId WHERE h.hId=?";
+				java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
+				pstm.setInt(1, unHid);
+					ResultSet rs = pstm.executeQuery();
+				
+					while  (rs.next()) {
 
+						dialistADevolver.add( new Dia(
+								rs.getInt("did"), 
+								rs.getDate("fechaActual"),
+								rs.getInt("estado"),
+								rs.getInt("hid")
+								));
+					}
+					pstm.close();
+
+					conn.close();
+					logger.info("Conexión exitosa: Lista Dias de Habito");	
+				
+			} catch (Exception e) {
+				logger.severe("Error en la conexión de BBDD en getDiaList:" + e);
+				dialistADevolver=null;
+			}
+			
+			return dialistADevolver;
+		}
+			
+
+	@Override
+	public Dia getDia(int unDid) {
+		Dia diaADevolver =null;
+		try {
+		
+			Connection conn =  this.datasource.getConnection();
+			// ordenes sql
+			String sql = "SELECT d.* FROM techfit.dia d  WHERE d.dId=?";
+			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, unDid);
 				ResultSet rs = pstm.executeQuery();
 			
-				if (rs.next()) {
-					usuarioADevolver = new Usuario(
-							rs.getInt("dId"),
-							rs.getString("diaSemana"),
-							//(password == null)?"":rs.getString("password"),
-							rs.getInt("fechaActual"),
-							rs.getInt("estado"),
-							rs.getInt("habito"),
-							rs.getInt("usuario"),
-							);
-					
-				}
+				if  (rs.next()) {
 
-				pstm.close();
-				conn.close();
-
-			} catch (Exception e) 			{
-				logger.severe("Error en la conexión de BBDD:" + e);
-				Object diaADevolver = null;
-			
-			
-			return diaADevolver;
-		
-			
-	/*	@Override
-		public did getD(int did) {
-			Dia diaADevolver = null;
-			try {
-				Connection conn = datasource.getConnection();
-				PreparedStatement pstm =null;
-				
-				// ordenes sql
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.uId=? LIMIT 1";
-				pstm = conn.prepareStatement(sql);
-				pstm.setInt(1, did);
-
-				ResultSet rs = pstm.executeQuery();
-
-				
-
-				if (rs.next()) {
-					diaADevolver = new Dia(
-							rs.getInt("dId"),
-							rs.getString("diaSemana"),
+					diaADevolver= new Dia(
+							rs.getInt("did"), 
 							rs.getDate("fechaActual"),
 							rs.getInt("estado"),
-							rs.getInt("habito"),
-							rs.getInt("usuario")
-							
+							rs.getInt("hid")
 							);
 				}
-
 				pstm.close();
+
 				conn.close();
-
-			} catch (Exception e) {
-				logger.severe("Error en la conexión de BBDD:" + e);
-				diaADevolver = null;
-			}
-			return diaADevolver;
+				logger.info("Conexión exitosa: Dia pedido");	
+			
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD en getDia:" + e);
+			diaADevolver=null;
 		}
-		*/
-
-	
 		
+		return diaADevolver;
+	}
 
+	@Override
+	public boolean updateDia(Dia unDia) {
+		Dia diaADevolver =null;
+		try {
+		
+			Connection conn =  this.datasource.getConnection();
+			// ordenes sql
+			String sql = "SELECT d.* FROM techfit.dia d  WHERE d.dId=?";
+			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, unDid);
+				ResultSet rs = pstm.executeQuery();
+			
+				if  (rs.next()) {
 
+					diaADevolver= new Dia(
+							rs.getInt("did"), 
+							rs.getDate("fechaActual"),
+							rs.getInt("estado"),
+							rs.getInt("hid")
+							);
+				}
+				pstm.close();
 
-		@Override
-		public List<Dia> getDiaList(Habito habit) {
-			// TODO Auto-generated method stub
-			return null;
+				conn.close();
+				logger.info("Conexión exitosa: Dia pedido");	
+			
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD en getDia:" + e);
+			diaADevolver=null;
 		}
-
-		@Override
-		public Dia getDia(int did) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean updateDia(Dia dia) {
-			// TODO Auto-generated method stub
-			return false;
-		}
+		
+		return diaADevolver;
+		
+		
+		
+		
+		return false;
+	}
+}

@@ -164,7 +164,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	
 	//PUT{id} actualizar datos de un habito
 	@Override
-	public boolean updateProyecto(int hid,Habito habito) throws Exception {
+	public boolean updateHabito(int hid,Habito habito) throws Exception {
 		boolean estaActualizado = false;
 		PreparedStatement pstm = null;
 		Connection conn = null;

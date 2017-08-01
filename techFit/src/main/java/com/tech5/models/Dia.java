@@ -8,16 +8,16 @@ public class Dia {
 	//Atributos
 	private int did;
 	//private Calendar diaSemana;
-	private Calendar fechaActual;
+	private Date fechaActual;
 	private int estado;
 	private int hid;
 	
 	//Constructor
-	public Dia(int did,  Calendar fecha, int estado, int hid) {
+	public Dia(int did,  Date fecha, int estado, int hid) {
 		super();
 		this.did = did;
 		//this.diaSemana = diaSemana;
-		this.fechaActual = fecha;
+		this.fechaActual = fechaActual;
 		this.estado = estado;
 		this.hid = hid;
 	}
@@ -35,10 +35,10 @@ public class Dia {
 	//public void setDiaSemana(Calendar diaSemana) {
 	//	this.diaSemana = diaSemana;
 	//}
-	public Calendar getFecha() {
+	public Date getFecha() {
 		return fechaActual;
 	}
-	public void setFecha(Calendar fecha) {
+	public void setFecha(Date fecha) {
 		this.fechaActual = fecha;
 	}
 	public int getEstado() {
