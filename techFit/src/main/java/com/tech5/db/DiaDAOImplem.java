@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import com.tech5.models.Dia;
-import com.tech5.models.Habito;
-import com.tech5.models.Usuario;
+
 
 public class DiaDAOImplem extends DiaDAO {
 
@@ -26,110 +26,101 @@ public class DiaDAOImplem extends DiaDAO {
 	}
 
 	@Override
-		public List<Dia> getDiaListxHabito(int unHid){
-			List<Dia> dialistADevolver =new ArrayList<Dia>();
-			try {
-			
-				Connection conn =  this.datasource.getConnection();
-				// ordenes sql
-				String sql = "SELECT d.* FROM techfit.dia d LEFT JOIN techfit.habito h ON d.habito=h.hId WHERE h.hId=?";
-				java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-				pstm.setInt(1, unHid);
-					ResultSet rs = pstm.executeQuery();
-				
-					while  (rs.next()) {
+	public List<Dia> getDiaListxHabito(int unHid) {
+		List<Dia> dialistADevolver = new ArrayList<Dia>();
+		try {
 
-						dialistADevolver.add( new Dia(
-								rs.getInt("did"), 
-								rs.getDate("fechaActual"),
-								rs.getInt("estado"),
-								rs.getInt("hid")
-								));
-					}
-					pstm.close();
+			Connection conn = this.datasource.getConnection();
+			// ordenes sql
+			String sql = "SELECT d.* FROM techfit.dia d LEFT JOIN techfit.habito h ON d.habito=h.hId WHERE h.hId=?";
+			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, unHid);
+			ResultSet rs = pstm.executeQuery();
 
-					conn.close();
-					logger.info("Conexión exitosa: Lista Dias de Habito");	
-				
-			} catch (Exception e) {
-				logger.severe("Error en la conexión de BBDD en getDiaList:" + e);
-				dialistADevolver=null;
+			while (rs.next()) {
+
+				dialistADevolver.add(
+						new Dia(rs.getInt("did"), rs.getString("diaSemana"), rs.getDate("fechaActual"), rs.getInt("estado"), rs.getInt("hid")));
 			}
-			
-			return dialistADevolver;
+			pstm.close();
+
+			conn.close();
+			logger.info("Conexión exitosa: Lista Dias de Habito");
+
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD en getDiaList:" + e);
+			dialistADevolver = null;
 		}
-			
+
+		return dialistADevolver;
+	}
 
 	@Override
-	public Dia getDia(int unDid) {
-		Dia diaADevolver =null;
+	public Dia getDia(int unDid) throws Exception {
+		Dia diaADevolver = null;
 		try {
-		
-			Connection conn =  this.datasource.getConnection();
+
+			Connection conn = this.datasource.getConnection();
 			// ordenes sql
 			String sql = "SELECT d.* FROM techfit.dia d  WHERE d.dId=?";
 			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, unDid);
-				ResultSet rs = pstm.executeQuery();
-			
-				if  (rs.next()) {
+			ResultSet rs = pstm.executeQuery();
 
-					diaADevolver= new Dia(
-							rs.getInt("did"), 
-							rs.getDate("fechaActual"),
-							rs.getInt("estado"),
-							rs.getInt("hid")
-							);
-				}
-				pstm.close();
+			if (rs.next()) {
 
-				conn.close();
-				logger.info("Conexión exitosa: Dia pedido");	
-			
+				diaADevolver = new Dia(rs.getInt("did"), rs.getString("diaSemana"), rs.getDate("fechaActual"), rs.getInt("estado"),
+						rs.getInt("hid"));
+			}
+			pstm.close();
+
+			conn.close();
+			logger.info("Conexión exitosa: Dia pedido");
+
 		} catch (Exception e) {
 			logger.severe("Error en la conexión de BBDD en getDia:" + e);
-			diaADevolver=null;
+			diaADevolver = null;
 		}
-		
+
 		return diaADevolver;
 	}
 
 	@Override
-	public boolean updateDia(Dia unDia) {
-		Dia diaADevolver =null;
+	public boolean updateDia(Dia unDia) throws Exception {
+		boolean diaActualizado = false;
+		PreparedStatement pstm = null;
+		Connection conn = this.datasource.getConnection();
+
+		// ordenes sql
+		String sql = "UPDATE techfit.dia SET " + "diaSemana=?, " + "fechaActual=?, " + "estado=?, " + "hId=?, "
+				+ "WHERE dId=?";
+
+		pstm = conn.prepareStatement(sql);
+
+		pstm.setString(1, unDia.getDiaSemana());
+		pstm.setDate(2, (Date) unDia.getFecha());
+		pstm.setInt(3, unDia.getEstado());
+		pstm.setInt(4, unDia.getHid());
+
+		pstm.executeUpdate();
+
 		try {
-		
-			Connection conn =  this.datasource.getConnection();
-			// ordenes sql
-			String sql = "SELECT d.* FROM techfit.dia d  WHERE d.dId=?";
-			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-			pstm.setInt(1, unDid);
-				ResultSet rs = pstm.executeQuery();
-			
-				if  (rs.next()) {
+			if (pstm.getUpdateCount() == 0) {
+				throw new Exception(MessageFormat.format("Nigun ObjetoDia esta actualizado \"{0}\"", sql));
+			} else {
+				diaActualizado = true;
+				logger.info("Conexión exitosa updateDia");
+			}
+			pstm.close();
+			conn.close();
+		} catch (
 
-					diaADevolver= new Dia(
-							rs.getInt("did"), 
-							rs.getDate("fechaActual"),
-							rs.getInt("estado"),
-							rs.getInt("hid")
-							);
-				}
-				pstm.close();
-
-				conn.close();
-				logger.info("Conexión exitosa: Dia pedido");	
-			
-		} catch (Exception e) {
-			logger.severe("Error en la conexión de BBDD en getDia:" + e);
-			diaADevolver=null;
+		Exception e) {
+			logger.severe("Error en la conexiï¿½n de BBDD en updateDia:" + e);
 		}
-		
-		return diaADevolver;
-		
-		
-		
-		
-		return false;
+
+		return diaActualizado;
+
 	}
+
 }
