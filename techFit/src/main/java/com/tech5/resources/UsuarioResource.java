@@ -17,14 +17,18 @@ import javax.ws.rs.core.Response;
 
 import com.tech5.models.Message;
 import com.tech5.models.Usuario;
+
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.tech5.db.DAOFactory;
 import com.tech5.db.UsuarioDAO;
 
-@Path("/usuario")
+@Path("/usuarios")
 public class UsuarioResource extends JSONService {
-	public static UsuarioDAO uDAO = (UsuarioDAO) DAOFactory.getInstance().getDAO("usuario");
-	private static List<Usuario> misUsuarios;//actua como un singleton todas las llamadas responden a este atributo
+	//public static UsuarioDAO uDAO = (UsuarioDAO) DAOFactory.getInstance().getDAO("usuario");
+	private static List<Usuario> misUsuarios;
+	//actua como un singleton todas las llamadas responden a este atributo
+	
+	
 	static{misUsuarios=new ArrayList<Usuario>();}
 	
 	
@@ -52,9 +56,25 @@ public class UsuarioResource extends JSONService {
 		@GET
 		@Path("/{uid}")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getUsuario(int uid, @HeaderParam("token") String token){
-			Response elUsuario = null;
-			return elUsuario;
+		public Response getUsuario(@PathParam("uid")int uid, @HeaderParam("token") String token){
+			
+			String userEmail = this.getUserEmailFromToken(token);
+			Response mResponse=null;
+			
+			if (userEmail == null) {
+				Message statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
+				mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+			}else  {
+				Usuario unUsuario = new Usuario();
+				for (Usuario user : misUsuarios) {
+					if(user.getUid()==uid){
+						unUsuario=user;
+						break;
+					}
+				}
+			mResponse=Response.status(200).entity(unUsuario).build();
+			}
+			return mResponse;
 		}
 		
 		
@@ -65,8 +85,27 @@ public class UsuarioResource extends JSONService {
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateUsuario(@PathParam("uid") int uid,Usuario updateUser, @HeaderParam("token") String token) {
-			Response updUsuario = null;
-			return updUsuario;
+			
+			String userEmail = this.getUserEmailFromToken(token);
+			Response mResponse=null;
+			
+			if (userEmail == null) {
+				Message statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
+				mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
+			}else  {
+			
+				for (Usuario user : misUsuarios) {
+					if(user.getUid()==uid){
+						misUsuarios.remove(user);
+						misUsuarios.add(updateUser);
+						break;
+					}
+				}
+				Message statusMessage = new Message(Status.CREATED.getStatusCode(),"Usuario modificado!!!");
+				mResponse=Response.status(200).entity(statusMessage).build();
+			}
+			
+			return mResponse;
 		}
 
 		/*@Path("/{uid}")

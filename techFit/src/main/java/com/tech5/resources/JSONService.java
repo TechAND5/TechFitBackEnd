@@ -53,7 +53,6 @@ public class JSONService {
 
 	}
 
-
 	/* AUX */
 	protected String getUserEmailFromToken(String token) {
 		if (token == null)
@@ -69,7 +68,7 @@ public class JSONService {
 
 			// Validate Token's authenticity and check claims
 			JwtConsumer jwtConsumer = new JwtConsumerBuilder().setRequireExpirationTime()
-					.setAllowedClockSkewInSeconds(3000).setRequireSubject().setExpectedIssuer("netmind.com")
+					.setAllowedClockSkewInSeconds(3000).setRequireSubject().setExpectedIssuer("tech5.com")
 					.setVerificationKey(jwk.getKey()).build();
 
 			// Validate the JWT and process it to the Claims
@@ -83,4 +82,39 @@ public class JSONService {
 		return userEmail;
 	}
 
+	// Crea el token en Jws este, metodo se llamará en AuthService
+	protected JsonWebSignature crearJWT(RsaJsonWebKey senderJwk, String email) {
+		
+
+		senderJwk.setKeyId("1");
+		logger.info("JWK (1) ===> " + senderJwk.toJson());
+
+		// Create the Claims, which will be the content of the JWT
+
+		JwtClaims claims = new JwtClaims();
+		// who creates the token and signs it
+		claims.setIssuer("tech5.com");
+		// token will expire (30 minutes from now)
+		claims.setExpirationTimeMinutesInTheFuture(30);
+		// a unique identifier for the token
+		claims.setGeneratedJwtId();
+		// when the token was issued/created (now)
+		claims.setIssuedAtToNow();
+		// time before which the token is not yet valid (2 minutes ago)
+		claims.setNotBeforeMinutesInThePast(2);
+		// the subject/principal is whom the token is about
+		claims.setSubject(email);
+		// multi-valued claims for roles
+		claims.setStringListClaim("roles", "Admin");
+
+		JsonWebSignature jws = new JsonWebSignature();
+
+		jws.setPayload(claims.toJson());
+
+		jws.setKeyIdHeaderValue(senderJwk.getKeyId());
+		jws.setKey(senderJwk.getPrivateKey());
+
+		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+		return jws;
+	}
 }

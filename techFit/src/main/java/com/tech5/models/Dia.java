@@ -22,6 +22,10 @@ public class Dia {
 		this.hid = hid;
 	}
 
+	public Dia() {
+		// TODO Auto-generated constructor stub
+	}
+
 	// Getters&Setters
 	public int getDid() {
 		return did;

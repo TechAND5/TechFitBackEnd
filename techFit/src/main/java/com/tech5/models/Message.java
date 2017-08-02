@@ -11,7 +11,7 @@ public class Message {
 		
 	}
 	
-	public Message(int status,String body) {
+	public Message(int status, String body) {
 		super();
 		this.status= status;
 		this.body = body;

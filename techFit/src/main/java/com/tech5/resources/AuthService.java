@@ -58,7 +58,7 @@ public class AuthService extends JSONService{
 		Usuario user = null;
 		UsuarioDAO usuarioDAO;
 		try {
-			usuarioDAO = (UsuarioDAO) DAOFactory.getInstance().getDAO("usuario");
+			usuarioDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
 			user = usuarioDAO.getUsuario(username, password);
 			logger.log(Level.INFO, "user:" + user);
 		} catch (Exception e) {
@@ -71,41 +71,18 @@ public class AuthService extends JSONService{
 			statusMessage.setBody("Access Denied for this functionality !!!");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
 		}
-
-		RsaJsonWebKey senderJwk = (RsaJsonWebKey) jwkList.get(0);
-
-		senderJwk.setKeyId("1");
-		logger.info("JWK (1) ===> " + senderJwk.toJson());
-
-		// Create the Claims, which will be the content of the JWT
-		JwtClaims claims = new JwtClaims();
-		claims.setIssuer("tech5.com"); // who creates the token and signs it
-		claims.setExpirationTimeMinutesInTheFuture(20); // token will expire (10
-														// minutes from now)
-		claims.setGeneratedJwtId(); // a unique identifier for the token
-		claims.setIssuedAtToNow(); // when the token was issued/created (now)
-		claims.setNotBeforeMinutesInThePast(2); // time before which the token
-												// is not yet valid (2 minutes
-												// ago)
-		claims.setSubject(user.getEmail()); // the subject/principal is whom
-											// the token is about
-		claims.setStringListClaim("roles", "client"); //
-		// multi-valued claims for roles
-		JsonWebSignature jws = new JsonWebSignature();
-
-		jws.setPayload(claims.toJson());
-
-		jws.setKeyIdHeaderValue(senderJwk.getKeyId());
-		jws.setKey(senderJwk.getPrivateKey());
-		jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
-
+		//se llama al metodo creado en jsonService
+		JsonWebSignature jws = crearJWT((RsaJsonWebKey) jwkList.get(0), user.getEmail());
+		
 		String jwt = null;
+	
 		try {
 			jwt = jws.getCompactSerialization();
 		} catch (JoseException e) {
 			e.printStackTrace();
 		}
 
-		return Response.status(200).entity(jwt).build();
+			
+	return Response.status(200).entity(jwt).build();
 	}
 }

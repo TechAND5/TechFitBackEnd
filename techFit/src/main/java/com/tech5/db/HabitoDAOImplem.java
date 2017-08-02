@@ -18,7 +18,7 @@ import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
 public class HabitoDAOImplem extends HabitoDAO {
-	private static Logger logger = Logger.getLogger("UsuarioBBDAOImpl");
+	private static Logger logger = Logger.getLogger("UsuarioDAOImpl");
 	
 	private static HabitoDAOImplem instance = null;
 
@@ -124,7 +124,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	
 	//POST insertar nuevo habito a la lista de habitos de un usuario
 	@Override
-	public boolean insertHabito(Habito newHabito) throws Exception {
+	public boolean insertHabito(Habito nuevoHab) throws Exception {
 		boolean estaInsertado = false;
 		PreparedStatement pstm = null;
 		Connection conn = null;
@@ -134,12 +134,12 @@ public class HabitoDAOImplem extends HabitoDAO {
 			String sql = "INSERT INTO techfit.habito ('hid', 'titulo', 'descripcion', 'fechaI', 'progreso','estado') VALUES (?,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
 			
-			pstm.setInt(1,newHabito.getHid()); 
-			pstm.setString(2,newHabito.getTitulo());
-			pstm.setString(3,newHabito.getDescripcion());
-			pstm.setDate(4,(Date) newHabito.getFechaI());
-			pstm.setInt(5,newHabito.getProgreso());
-			pstm.setInt(6,newHabito.getEstado());
+			pstm.setInt(1,nuevoHab.getHid()); 
+			pstm.setString(2,nuevoHab.getTitulo());
+			pstm.setString(3,nuevoHab.getDescripcion());
+			pstm.setDate(4,(Date)nuevoHab.getFechaI());
+			pstm.setInt(5,nuevoHab.getProgreso());
+			pstm.setInt(6,nuevoHab.getEstado());
 
 			
 			// execute the preparedstatement
@@ -164,7 +164,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	
 	//PUT{id} actualizar datos de un habito
 	@Override
-	public boolean updateHabito(int hid,Habito habito) throws Exception {
+	public boolean updateHabito(int hid,Habito elHabito) throws Exception {
 		boolean estaActualizado = false;
 		PreparedStatement pstm = null;
 		Connection conn = null;
@@ -174,11 +174,11 @@ public class HabitoDAOImplem extends HabitoDAO {
 				+ "progreso=?, " + "estado=? " + "WHERE hId=?";
 		
 		pstm = conn.prepareStatement(sql);
-		pstm.setString(2,habito.getTitulo());
-		pstm.setString(3,habito.getDescripcion());
-		pstm.setDate(4,(Date) habito.getFechaI());
-		pstm.setInt(5,habito.getProgreso());
-		pstm.setInt(6,habito.getEstado());
+		pstm.setString(2,elHabito.getTitulo());
+		pstm.setString(3,elHabito.getDescripcion());
+		pstm.setDate(4,(Date) elHabito.getFechaI());
+		pstm.setInt(5,elHabito.getProgreso());
+		pstm.setInt(6,elHabito.getEstado());
 		
 		
 		pstm.executeUpdate();
