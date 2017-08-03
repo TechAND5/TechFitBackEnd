@@ -13,19 +13,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jettison.json.JSONException;
 
+
+import com.tech5.models.Dia;
 import com.tech5.models.Habito;
 import com.tech5.models.Message;
 import com.tech5.models.Usuario;
 import com.tech5.db.DAOFactory;
+import com.tech5.db.DiaDAO;
 import com.tech5.db.HabitoDAO;
 import com.tech5.db.UsuarioDAO;
 
@@ -44,7 +45,7 @@ public class HabitoResource extends JSONService{
 		@GET
 		@Path("/")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getUserHabitList(@HeaderParam("token") String token)throws JSONException, JsonMappingException, IOException{
+		public Response getUserHabitList(@HeaderParam("token") String token)throws Exception{
 			
 			
 			String userEmail = this.getUserEmailFromToken(token);
@@ -84,7 +85,7 @@ public class HabitoResource extends JSONService{
 		@POST
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token) {
+		public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token)throws Exception {
 			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse=null;
 			
@@ -131,7 +132,7 @@ public class HabitoResource extends JSONService{
 		@GET
 		@Path("/{hid}")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token)throws JSONException, JsonMappingException, IOException{
+		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token)throws Exception{
 			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
@@ -168,7 +169,7 @@ public class HabitoResource extends JSONService{
 		@PUT
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response updateHabito(@PathParam("hid") int hid,Habito elHabito, @HeaderParam("token") String token) {
+		public Response updateHabito(@PathParam("hid") int hid,Habito elHabito, @HeaderParam("token") String token) throws Exception{
 			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
@@ -232,4 +233,43 @@ public class HabitoResource extends JSONService{
 			return mResponse;
 			
 		}
+		@GET
+		@Path("/{hid}/dias")
+		@Produces(MediaType.APPLICATION_JSON)
+		public Response getDiaList(@PathParam("hid") int hid,@HeaderParam("token") String token)throws Exception{
+			
+			String userEmail = this.getUserEmailFromToken(token);
+			Response mResponse = null;
+			Message statusMensaje = null;
+			if (userEmail == null) {
+				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
+				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+				return mResponse;
+		
+			}
+			try {
+				// obtener el objeto Habito completo
+				Habito habito= new Habito();
+				HabitoDAO habDAO=(HabitoDAO) DAOFactory.getDAO("habito");
+				habito= habDAO.getHabito(hid);
+				// existe usuario uid??
+				if (habito != null) {
+				// Obtener la lista de los dias de ese habito de un usuario
+					Dia elDia=new Dia();
+					DiaDAO diaDAO = (DiaDAO) DAOFactory.getDAO("dia");
+					elDia = (Dia) diaDAO.getDiaListxHabito(hid);
+					return Response.status(200).entity(elDia).build();
+				} else {
+					throw new RuntimeException("- El habito (" + hid + ") es desconocido.");
+				}
+				
+			} catch (Exception e) {
+				mResponse = Response.status(499)
+						.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto dia.\nLease API").build();
+				return mResponse;
+			}
+			
+			
+		}
+		
 }

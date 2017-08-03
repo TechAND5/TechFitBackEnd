@@ -32,6 +32,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	
 	
 	//get{id}-obtener un habito por hid
+	@Override
 	public Habito getHabito(int hid) {
 		Habito habitoADevolver = null;
 		try {
@@ -70,6 +71,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	}
 	
 	//GET -Obtener lista de habitos x id usuario:
+	@Override
 	public List<Habito> getHabitoxUser(Usuario user) {
 		List<Habito> habitListADevolver = new ArrayList<Habito>();
 		

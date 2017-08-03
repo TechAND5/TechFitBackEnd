@@ -3,13 +3,13 @@
 <Context>
     <!-- Specify a JDBC datasource -->
     <Resource 
-    	name="jdbc/techFit" 
+    	name="jdbc/techfit" 
     	auth="Container"
         type="javax.sql.DataSource" 
         username="techFit_user" 
         password="fit123"
         driverClassName="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost/techFit?SSL=false"
+        url="jdbc:mysql://localhost/techfit?SSL=false"
         maxActive="10" 
         maxIdle="4" />   
 </Context>

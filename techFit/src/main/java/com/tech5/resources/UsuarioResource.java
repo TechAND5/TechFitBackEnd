@@ -29,7 +29,13 @@ public class UsuarioResource extends JSONService {
 	//actua como un singleton todas las llamadas responden a este atributo
 	
 	
-	static{misUsuarios=new ArrayList<Usuario>();}
+	static{
+		misUsuarios=new ArrayList<Usuario>();
+		misUsuarios.add(new Usuario(1, "diana@es.com", "dianacom", "diana","diana","Ramon"));
+		misUsuarios.add(new Usuario(2, "Juana@es.com", "Juanacom", "juana","juana","juanason"));
+	
+	
+	}
 	
 	
 	//POST

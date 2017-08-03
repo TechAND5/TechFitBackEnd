@@ -33,44 +33,6 @@ public class DiaResource extends JSONService {
 	}
 
 	//GET mostrar lista de dias de un habito
-	@GET
-	@Path("/{hid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getDiaList(@PathParam("hid") int hid,@HeaderParam("token") String token)throws IOException{
-		
-		String userEmail = this.getUserEmailFromToken(token);
-		Response mResponse = null;
-		Message statusMensaje = null;
-		if (userEmail == null) {
-			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-			return mResponse;
-	
-		}
-		try {
-			// obtener el objeto Habito completo
-			Habito habito= new Habito();
-			HabitoDAO habDAO=(HabitoDAO) DAOFactory.getDAO("habito");
-			habito= habDAO.getHabito(hid);
-			// existe usuario uid??
-			if (habito != null) {
-			// Obtener la lista de los dias de ese habito de un usuario
-				Dia elDia=new Dia();
-				DiaDAO diaDAO = (DiaDAO) DAOFactory.getDAO("dia");
-				DiaResource.misDias = diaDAO.getDiaListxHabito(hid);
-				return Response.status(200).entity(DiaResource.misDias).build();
-			} else {
-				throw new RuntimeException("- El habito (" + hid + ") es desconocido.");
-			}
-			
-		} catch (Exception e) {
-			mResponse = Response.status(499)
-					.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto dia.\nLease API").build();
-			return mResponse;
-		}
-		
-		
-	}
 	
 	
 	//GET{id} Mostrar un dia por id
