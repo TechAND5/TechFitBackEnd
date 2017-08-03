@@ -98,7 +98,7 @@ public class DiaDAOImplem extends DiaDAO {
 		pstm = conn.prepareStatement(sql);
 
 		pstm.setString(1, unDia.getDiaSemana());
-		pstm.setDate(2, (Date) unDia.getFecha());
+		pstm.setDate(2, new java.sql.Date(unDia.getFecha().getTime())  );  //DateTime en java para SQL 
 		pstm.setInt(3, unDia.getEstado());
 		pstm.setInt(4, unDia.getHid());
 

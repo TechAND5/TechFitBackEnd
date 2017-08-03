@@ -24,7 +24,7 @@ import com.tech5.db.DiaDAO;
 import com.tech5.db.HabitoDAO;
 import com.tech5.db.UsuarioDAO;
 
-
+@Path("/dias")
 public class DiaResource extends JSONService {
 
 	private static List<Dia> misDias;
