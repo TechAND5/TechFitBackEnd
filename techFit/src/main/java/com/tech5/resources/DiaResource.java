@@ -1,8 +1,6 @@
 package com.tech5.resources;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,21 +14,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.tech5.models.Dia;
-import com.tech5.models.Habito;
+
 import com.tech5.models.Message;
-import com.tech5.models.Usuario;
+
 import com.tech5.db.DAOFactory;
 import com.tech5.db.DiaDAO;
-import com.tech5.db.HabitoDAO;
-import com.tech5.db.UsuarioDAO;
+
 
 @Path("/dias")
 public class DiaResource extends JSONService {
 
-	private static List<Dia> misDias;
-	static {
-		 DiaResource.misDias = new ArrayList<Dia>();
-	}
+	//private static List<Dia> misDias;
+	//static {
+	//	 DiaResource.misDias = new ArrayList<Dia>();
+	//}
 
 	//GET mostrar lista de dias de un habito
 	
@@ -41,7 +38,7 @@ public class DiaResource extends JSONService {
 		@Path("/{did}")
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getDia(@PathParam("did") int did, @HeaderParam("token") String token){
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMessage = null;
 			if (userEmail == null) {
@@ -75,7 +72,7 @@ public class DiaResource extends JSONService {
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateDia(@PathParam("did") int did,Dia updateDia, @HeaderParam("token") String token) {
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMessage = null;
 			if (userEmail == null) {

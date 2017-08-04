@@ -1,8 +1,15 @@
 #AUTENTICACIÓN 
-curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v -X GET  http://localhost:8080/techFit/apiFit/json/authenticate
+curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v  GET  http://localhost:8080/techFit/apiFit/json/authenticate
+
+--->> curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v  GET  http://localhost:8080/techFit/apiFit/authenticate
+
 
 #Envio de token para acceder a zona restringida
 curl -H "Content-Type: application/json" -H "token: eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJkZWh1bW8uY29tIiwiZXhwIjoxNDgwNDQxNDkzLCJqdGkiOiJwUUNWYVpLUldCVXVpSmZna0xvcDZRIiwiaWF0IjoxNDgwNDQwODkzLCJuYmYiOjE0ODA0NDA3NzMsInN1YiI6Imp1YW5AZ21haWwuY29tIiwicm9sZXMiOlsiY2xpZW50Il19.hMTfrUnwnZ0Yz6IRPnFvf6_fNCqhfhbwq1XbfYK2q8LZpayzPTLKw0Mx0JoJAik0WhCStQcfLeBQGEIkJz88ebexPkRMMNWJmxXKKmap6NchHu8aZc0cBpjkv7EOy5uAe6gzFYY9o6-sc0SKoiRBCVjys4klcArFb3RWuz_SJwTUFUjmOJ225_1nfKb0u5uZNuLl3lvePRlSlsu7g3gM3YjH-_h6kOviU0vjr3kB4CXavr1lVO5kGrbVSPLSh18UEbxQ9BMFacnsdGm89psV55c_MCYoccEfFi87BPl75tGa0fTBE_vbKMsWL1rpjAWHXfBOS0Y3u9uE-ROl68F5ww" -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
+
+-->>  curl -H "Content-Type: application/json" -H "token: " -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
+
+
 # GET
 curl GET http://localhost:8080/techfit/apiFit/usuarios
 

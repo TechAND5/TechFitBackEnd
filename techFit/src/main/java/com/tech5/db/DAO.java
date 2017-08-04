@@ -16,7 +16,7 @@ public abstract class DAO {
 				Context initContext = new InitialContext();
 				Context envContext = (Context) initContext.lookup("java:/comp/env"); 
 
-				this.datasource = (DataSource)envContext.lookup("jdbc/techFit");
+				this.datasource = (DataSource)envContext.lookup("jdbc/techfit");
 			}catch (Exception e) {
 				logger.info("Error al instanciar Datasource!!!!");
 				e.printStackTrace();

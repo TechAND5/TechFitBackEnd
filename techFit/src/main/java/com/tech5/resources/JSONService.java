@@ -1,22 +1,15 @@
 package com.tech5.resources;
 
-import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
+import javax.ws.rs.Path;
+
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jwk.RsaJsonWebKey;
@@ -28,7 +21,6 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 
-import com.sun.jersey.api.client.ClientResponse.Status;
 
 @Path("/json")
 public class JSONService {

@@ -30,7 +30,7 @@ import com.tech5.db.DiaDAO;
 import com.tech5.db.HabitoDAO;
 import com.tech5.db.UsuarioDAO;
 
-@Path("/habito")
+@Path("/habitos")
 public class HabitoResource extends JSONService{
 	//public static HabitoDAO hDAO = (HabitoDAO) DAOFactory.getInstance().getDAO("habito");
 	
@@ -48,7 +48,7 @@ public class HabitoResource extends JSONService{
 		public Response getUserHabitList(@HeaderParam("token") String token)throws Exception{
 			
 			
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
@@ -86,7 +86,7 @@ public class HabitoResource extends JSONService{
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token)throws Exception {
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse=null;
 			
 			try {
@@ -133,7 +133,7 @@ public class HabitoResource extends JSONService{
 		@Path("/{hid}")
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token)throws Exception{
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
@@ -170,7 +170,7 @@ public class HabitoResource extends JSONService{
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateHabito(@PathParam("hid") int hid,Habito elHabito, @HeaderParam("token") String token) throws Exception{
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
@@ -207,7 +207,7 @@ public class HabitoResource extends JSONService{
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response deleteHabito(@PathParam("hid") int hid, @HeaderParam("token") String token)throws Exception {
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
@@ -220,7 +220,7 @@ public class HabitoResource extends JSONService{
 				Habito elHabito = new Habito();
 				HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
 				elHabito = habDAO.getHabito(hid);
-				if ((habDAO.delHabito(hid))) {
+				if (elHabito != null) {
 					statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Habito borrado");
 					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 					return mResponse;
@@ -238,7 +238,7 @@ public class HabitoResource extends JSONService{
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getDiaList(@PathParam("hid") int hid,@HeaderParam("token") String token)throws Exception{
 			
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {

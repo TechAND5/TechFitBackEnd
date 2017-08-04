@@ -14,9 +14,7 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.jose4j.jwk.RsaJsonWebKey;
-import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
 import com.sun.jersey.api.client.ClientResponse.Status;

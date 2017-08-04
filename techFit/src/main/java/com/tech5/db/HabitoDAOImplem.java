@@ -12,13 +12,12 @@ import java.text.MessageFormat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
 public class HabitoDAOImplem extends HabitoDAO {
-	private static Logger logger = Logger.getLogger("UsuarioDAOImpl");
+	private static Logger logger = Logger.getLogger("HabitoDAOImplem");
 	
 	private static HabitoDAOImplem instance = null;
 
@@ -46,12 +45,14 @@ public class HabitoDAOImplem extends HabitoDAO {
 			if (rs.next()) {
 
 				habitoADevolver = new Habito(
-						rs.getInt("hid"), 
+						rs.getInt("hId"), 
 						rs.getString("titulo"),
 						rs.getString("descripcion"),
 						rs.getDate("fechaI"),
+						rs.getDate("fechaF"),
 						rs.getInt("progreso"),
-						rs.getInt("estado")
+						rs.getInt("estado"),
+						rs.getInt("usuario")
 						
 						);
 			}
@@ -90,12 +91,14 @@ public class HabitoDAOImplem extends HabitoDAO {
 			while  (rs.next()) {
 
 				habitListADevolver.add( new Habito(
-						rs.getInt("hid"), 
+						rs.getInt("hId"), 
 						rs.getString("titulo"),
 						rs.getString("descripcion"),
 						rs.getDate("fechaI"),
+						rs.getDate("fechaF"),
 						rs.getInt("progreso"),
-						rs.getInt("estado")
+						rs.getInt("estado"),
+						rs.getInt("usuario")
 						
 						));
 			}
@@ -120,7 +123,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 	 //GET obtener la lista de habitos
 	 @Override
 	public List<Habito> getHabitoList() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}*/
 	
@@ -133,7 +136,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 		
 		try {
 			conn = this.datasource.getConnection();
-			String sql = "INSERT INTO techfit.habito ('hid', 'titulo', 'descripcion', 'fechaI', 'progreso','estado') VALUES (?,?,?,?,?,?)";
+			String sql = "INSERT INTO techfit.habito ('hid', 'titulo', 'descripcion', 'fechaI', 'fechaF', 'progreso','estado', 'usuario') VALUES (?,?,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
 			
 			pstm.setInt(1,nuevoHab.getHid()); 
@@ -142,6 +145,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 			pstm.setDate(4,(Date)nuevoHab.getFechaI());
 			pstm.setInt(5,nuevoHab.getProgreso());
 			pstm.setInt(6,nuevoHab.getEstado());
+			pstm.setInt(7,nuevoHab.getUsuario());
 
 			
 			// execute the preparedstatement
@@ -172,15 +176,16 @@ public class HabitoDAOImplem extends HabitoDAO {
 		Connection conn = null;
 
 		conn = this.datasource.getConnection();
-		String sql = "UPDATE techfit.habito SET " + "titulo=?, " + "descripcion=?, " + "fechaI=?, "
-				+ "progreso=?, " + "estado=? " + "WHERE hId=?";
+		String sql ="UPDATE techfit.habito SET titulo=?, descripcion=?, fechaI=?, fechaF=?, progreso=?, estado=? WHERE hId=?";
 		
 		pstm = conn.prepareStatement(sql);
-		pstm.setString(2,elHabito.getTitulo());
-		pstm.setString(3,elHabito.getDescripcion());
-		pstm.setDate(4,(Date) elHabito.getFechaI());
+		pstm.setString(1,elHabito.getTitulo());
+		pstm.setString(2,elHabito.getDescripcion());
+		pstm.setDate(3,(Date) elHabito.getFechaI());
+		pstm.setDate(4,(Date) elHabito.getFechaF());
 		pstm.setInt(5,elHabito.getProgreso());
 		pstm.setInt(6,elHabito.getEstado());
+		
 		
 		
 		pstm.executeUpdate();

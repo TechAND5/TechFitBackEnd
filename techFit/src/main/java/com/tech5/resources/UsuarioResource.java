@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -19,8 +18,7 @@ import com.tech5.models.Message;
 import com.tech5.models.Usuario;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
-import com.tech5.db.DAOFactory;
-import com.tech5.db.UsuarioDAO;
+
 
 @Path("/usuarios")
 public class UsuarioResource extends JSONService {
@@ -44,13 +42,13 @@ public class UsuarioResource extends JSONService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response insertUsuario(Usuario nuevoUser,@HeaderParam("token") String token){
-		String userEmail = this.getUserEmailFromToken(token);
+		String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 		Response mResponse=null;
 		if (userEmail == null) {
 			Message statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
 			mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 		}else  {
-			this.misUsuarios.add(nuevoUser);
+			UsuarioResource.misUsuarios.add(nuevoUser);
 			Message statusMensaje = new Message(Status.CREATED.getStatusCode(),"Usuario Añadido!!!");
 			mResponse=Response.status(200).entity(statusMensaje).build();
 		}
@@ -64,7 +62,7 @@ public class UsuarioResource extends JSONService {
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getUsuario(@PathParam("uid")int uid, @HeaderParam("token") String token){
 			
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse=null;
 			
 			if (userEmail == null) {
@@ -92,7 +90,7 @@ public class UsuarioResource extends JSONService {
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateUsuario(@PathParam("uid") int uid,Usuario updateUser, @HeaderParam("token") String token) {
 			
-			String userEmail = this.getUserEmailFromToken(token);
+			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse=null;
 			
 			if (userEmail == null) {

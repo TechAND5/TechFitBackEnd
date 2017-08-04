@@ -2,7 +2,6 @@
 package com.tech5.db;
 
 
-import java.sql.SQLException;
 import java.util.List;
 
 

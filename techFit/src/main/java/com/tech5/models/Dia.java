@@ -1,6 +1,5 @@
 package com.tech5.models;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Dia {
@@ -10,20 +9,20 @@ public class Dia {
 	private String diaSemana;
 	private Date fechaActual;
 	private int estado;
-	private int hid;
+	private int habito;
 
 	// Constructor
-	public Dia(int did, String diaSemana, Date fecha, int estado, int hid) {
+	public Dia(int did, String diaSemana, Date fechaActual, int estado, int habito) {
 		super();
 		this.did = did;
 		this.diaSemana = diaSemana;
 		this.fechaActual = fechaActual;
 		this.estado = estado;
-		this.hid = hid;
+		this.habito = habito;
 	}
 
 	public Dia() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	// Getters&Setters
@@ -59,12 +58,21 @@ public class Dia {
 		this.estado = estado;
 	}
 
-	public int getHid() {
-		return hid;
+	public Date getFechaActual() {
+		return fechaActual;
 	}
 
-	public void setHid(int hid) {
-		this.hid = hid;
+	public void setFechaActual(Date fechaActual) {
+		this.fechaActual = fechaActual;
 	}
 
+	public int getHabito() {
+		return habito;
+	}
+
+	public void setHabito(int habito) {
+		this.habito = habito;
+	}
+
+	
 }

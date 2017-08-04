@@ -22,7 +22,7 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 	}
 
 	@Override
-	public Usuario getUsuario(String username, String password) {
+	public Usuario getUsuario(String email, String password) {
 		Usuario usuarioADevolver = null;
 
 		try {
@@ -31,22 +31,26 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 			PreparedStatement pstm = null;
 			// ordenes sql
 			if (password == null) {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? LIMIT 1;";
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? LIMIT 1;";
 				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, username);
+				pstm.setString(1, email);
 			} else {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.username=? AND password=? LIMIT 1;";
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? AND password=? LIMIT 1;";
 				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, username);
+				pstm.setString(1, email);
 				pstm.setString(2, password);
 			}
 
 			ResultSet rs = pstm.executeQuery();
 
 			if (rs.next()) {
-				usuarioADevolver = new Usuario(rs.getInt("uId"), rs.getString("email"),
-						(password == null) ? "" : rs.getString("password"), rs.getString("username"),
-						rs.getString("nombre"), rs.getString("apellido"));
+				usuarioADevolver = new Usuario(
+						rs.getInt("uId"), 
+						rs.getString("email"),
+						(password == null) ? "" : rs.getString("password"), 
+						rs.getString("username"),
+						rs.getString("nombre"), 
+						rs.getString("apellido"));
 			}
 
 			pstm.close();
@@ -75,8 +79,12 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 			ResultSet rs = pstm.executeQuery();
 
 			if (rs.next()) {
-				usuarioADevolver = new Usuario(rs.getInt("uId"), rs.getString("email"), rs.getString("username"),
-						rs.getString("nombre"), rs.getString("apellido"));
+				usuarioADevolver = new Usuario(
+						rs.getInt("uId"), 
+						rs.getString("email"),
+						rs.getString("username"),
+						rs.getString("nombre"), 
+						rs.getString("apellido"));
 			}
 
 			pstm.close();
@@ -101,7 +109,7 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 			String sql = "INSERT INTO u.* FROM techfit.usuario u VALUES(NULL,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
 			pstm.setString(1, nuevoUsuario.getEmail());
-			pstm.setString(2, nuevoUsuario.getPass());
+			pstm.setString(2, nuevoUsuario.getPassword());
 			pstm.setString(3, nuevoUsuario.getUsername());
 			pstm.setString(4, nuevoUsuario.getNombre());
 			pstm.setString(5, nuevoUsuario.getApellido());
@@ -129,13 +137,14 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 			Connection conn = this.datasource.getConnection();
 			PreparedStatement pstm = null;
 			// ordenes sql
-			String sql = "UPDATE techfit.usuario u SET u.email=?, u.pass=?, u.username=?, u.nombre=?, u.apellido=? WHERE u.uid=?";
+			String sql = "UPDATE techfit.usuario u SET u.email=?, u.password=?, u.username=?, u.nombre=?, u.apellido=? WHERE u.uId=?";
 			pstm = conn.prepareStatement(sql);
 			pstm.setString(1, "email");
-			pstm.setString(2, "pass");
+			pstm.setString(2, "password");
 			pstm.setString(3, "username");
 			pstm.setString(4, "nombre");
 			pstm.setString(5, "apellido");
+			pstm.setString(6, "uId");
 
 			int rs = pstm.executeUpdate();
 
