@@ -204,7 +204,7 @@ public class HabitoResource extends JSONService{
 				if (elHabito != null) {
 					statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Habito borrado");
 					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-					return mResponse;
+					
 				}			
 			} catch (Exception e) {
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto habito.\nLease API").build();

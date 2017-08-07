@@ -8,6 +8,11 @@ curl -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyN
 
 # GET usuario por id
 curl -X GET http://localhost:8080/techFit/apiFit/usuarios/1
+curl -X GET http://localhost:8080/techFit/apiFit/habitos/
+curl -X GET http://localhost:8080/techFit/apiFit/habitos/1
+curl -X GET http://localhost:8080/techFit/apiFit/habitos/1/dias
+curl -X GET http://localhost:8080/techFit/apiFit/dias/1
+
 
 # POST
 curl -X POST -H "Content-Type: application/json" -d '{\"username\":\"Manolo\",\"password\":\"manolocom\",\"uid\":12,\"email\":\"manolo@es.com\",\"nombre\":\"Manolo\",\"apellido\":\"Garcia\"}' http://localhost:8080/techFit/apiFit/usuarios/
