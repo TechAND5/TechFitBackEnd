@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.tech5.models.Dia;
+import com.tech5.models.Habito;
 
 
 public class DiaDAOImplem extends DiaDAO {
@@ -25,7 +26,7 @@ public class DiaDAOImplem extends DiaDAO {
 	}
 
 	@Override
-	public List<Dia> getDiaListxHabito(int unHid) {
+	public List<Dia> getDiaListxHabito(Habito hab) {
 		List<Dia> dialistADevolver = new ArrayList<Dia>();
 		try {
 
@@ -33,7 +34,7 @@ public class DiaDAOImplem extends DiaDAO {
 			// ordenes sql
 			String sql = "SELECT d.* FROM techfit.dia d LEFT JOIN techfit.habito h ON d.habito=h.hId WHERE h.hId=?";
 			java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-			pstm.setInt(1, unHid);
+			pstm.setInt(1, hab.getHid());
 			ResultSet rs = pstm.executeQuery();
 
 			while (rs.next()) {
@@ -49,7 +50,7 @@ public class DiaDAOImplem extends DiaDAO {
 			pstm.close();
 
 			conn.close();
-			logger.info("Conexión exitosa: Lista Dias de Habito");
+			logger.info("Conexión exitosa: Lista Dias de un Habito");
 
 		} catch (Exception e) {
 			logger.severe("Error en la conexión de BBDD en getDiaList:" + e);

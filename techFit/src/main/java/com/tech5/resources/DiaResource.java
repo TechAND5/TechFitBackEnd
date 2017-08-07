@@ -2,6 +2,9 @@ package com.tech5.resources;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -24,13 +27,8 @@ import com.tech5.db.DiaDAO;
 @Path("/dias")
 public class DiaResource extends JSONService {
 
-	//private static List<Dia> misDias;
-	//static {
-	//	 DiaResource.misDias = new ArrayList<Dia>();
-	//}
-
-	//GET mostrar lista de dias de un habito
-	
+	private static List<Dia> misDias;
+	static {misDias = new ArrayList<Dia>();}
 	
 	//GET{id} Mostrar un dia por id
 	
@@ -38,14 +36,14 @@ public class DiaResource extends JSONService {
 		@Path("/{did}")
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getDia(@PathParam("did") int did, @HeaderParam("token") String token){
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMessage = null;
 			if (userEmail == null) {
 				statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),
 						"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
-				return mResponse;
 			}
 			try {
 				Dia elDia=new Dia();
@@ -72,13 +70,13 @@ public class DiaResource extends JSONService {
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateDia(@PathParam("did") int did,Dia updateDia, @HeaderParam("token") String token) {
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMessage = null;
 			if (userEmail == null) {
 				statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
-				return mResponse;
+				
 			}
 			
 			try {

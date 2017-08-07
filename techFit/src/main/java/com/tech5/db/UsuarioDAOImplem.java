@@ -23,7 +23,7 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 
 	@Override
 	public Usuario getUsuario(String email, String password) {
-		Usuario usuarioADevolver = null;
+		Usuario aUser = null;
 
 		try {
 
@@ -43,14 +43,15 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 
 			ResultSet rs = pstm.executeQuery();
 
-			if (rs.next()) {
-				usuarioADevolver = new Usuario(
-						rs.getInt("uId"), 
-						rs.getString("email"),
-						(password == null) ? "" : rs.getString("password"), 
-						rs.getString("username"),
-						rs.getString("nombre"), 
-						rs.getString("apellido"));
+			while (rs.next()) {
+				aUser = new Usuario();
+				aUser.setUid(rs.getInt("uId"));
+				aUser.setEmail(rs.getString("email"));
+				aUser.setPassword(rs.getString("password"));
+				aUser.setUsername(rs.getString("username"));
+				aUser.setNombre(rs.getString("nombre"));
+				aUser.setApellido(rs.getString("apellido"));
+				break;
 			}
 
 			pstm.close();
@@ -58,11 +59,45 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 
 		} catch (Exception e) {
 			logger.severe("Error en la conexión de BBDD:" + e);
-			usuarioADevolver = null;
+			aUser = null;
 		}
 
-		return usuarioADevolver;
+		return aUser;
 	}
+	
+	@Override
+	public Usuario getUsuarioByMail(String email) throws Exception {
+		Usuario aUser = null;
+		try {
+			Connection conn = datasource.getConnection();
+			PreparedStatement pstm = null;
+			
+			String sql = "SELECT u.* FROM techfit.usuario u WHERE email=?";
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, email);
+
+			ResultSet rs = pstm.executeQuery();
+			while (rs.next()) {
+				aUser = new Usuario();
+				aUser.setUid(rs.getInt("uId"));
+				aUser.setEmail(rs.getString("email"));
+				aUser.setPassword(rs.getString("password"));
+				aUser.setUsername(rs.getString("username"));
+				aUser.setNombre(rs.getString("nombre"));
+				aUser.setApellido(rs.getString("apellido"));
+				break;
+			}
+
+			pstm.close();
+			conn.close();
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD:" + e);
+			aUser = null;
+		}
+
+		return aUser;
+	}
+
 
 	@Override
 	public Usuario getUsuario(int uid) {
@@ -82,6 +117,7 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 				usuarioADevolver = new Usuario(
 						rs.getInt("uId"), 
 						rs.getString("email"),
+						rs.getString("password"),
 						rs.getString("username"),
 						rs.getString("nombre"), 
 						rs.getString("apellido"));

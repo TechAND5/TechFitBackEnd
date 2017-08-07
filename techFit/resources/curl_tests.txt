@@ -1,24 +1,20 @@
 #AUTENTICACIÓN 
-curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v  GET  http://localhost:8080/techFit/apiFit/json/authenticate
-
---->> curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v  GET  http://localhost:8080/techFit/apiFit/authenticate
+curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v -X GET  http://localhost:8080/techFit/apiFit/authenticate
 
 
 #Envio de token para acceder a zona restringida
-curl -H "Content-Type: application/json" -H "token: eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJkZWh1bW8uY29tIiwiZXhwIjoxNDgwNDQxNDkzLCJqdGkiOiJwUUNWYVpLUldCVXVpSmZna0xvcDZRIiwiaWF0IjoxNDgwNDQwODkzLCJuYmYiOjE0ODA0NDA3NzMsInN1YiI6Imp1YW5AZ21haWwuY29tIiwicm9sZXMiOlsiY2xpZW50Il19.hMTfrUnwnZ0Yz6IRPnFvf6_fNCqhfhbwq1XbfYK2q8LZpayzPTLKw0Mx0JoJAik0WhCStQcfLeBQGEIkJz88ebexPkRMMNWJmxXKKmap6NchHu8aZc0cBpjkv7EOy5uAe6gzFYY9o6-sc0SKoiRBCVjys4klcArFb3RWuz_SJwTUFUjmOJ225_1nfKb0u5uZNuLl3lvePRlSlsu7g3gM3YjH-_h6kOviU0vjr3kB4CXavr1lVO5kGrbVSPLSh18UEbxQ9BMFacnsdGm89psV55c_MCYoccEfFi87BPl75tGa0fTBE_vbKMsWL1rpjAWHXfBOS0Y3u9uE-ROl68F5ww" -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
-
--->>  curl -H "Content-Type: application/json" -H "token: " -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
+curl -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIwOTk4NDgsImp0aSI6Im5XV0Z3TTVrXzZjYmoyczRKNm5PbWciLCJpYXQiOjE1MDIwOTgwNDgsIm5iZiI6MTUwMjA5NzkyOCwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.KIbWwuvBiPO6VyqxzKl7EZW9nWoEreDShjr948njV7_UOsg9yRPGsgU7jAdEly52sP8Dx4FYWgIad5L15Jf3zz2ANL_l32bbX0GGGtI0GxxL8F918T-Hn0ftS1fbTnGRtrxIJAnbi-SQ7OsnyNmlQlKHYDPq_1aMpCH_q6GhnwZmfDJcwSjr833LPsl-TY4mDxBhTb1IBWUPx66zVyXmes8rvdlZvtHh4Lpc3ow4vDNukNaDvaNOEaFXjClGEdjrdl47Rdro7xfBzTLOTdouP3QGvJWGSU-BsycZdeGMh33cUNijeCjI27XnMv_9F3EAW6QSIWwwPKCm9fnxpk83hw" -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
 
 
-# GET
-curl GET http://localhost:8080/techfit/apiFit/usuarios
+# GET usuario por id
+curl -X GET http://localhost:8080/techFit/apiFit/usuarios/1
 
 # POST
-curl -X POST -H "Content-Type: application/json" -d '{\"uid\":24,\"name\":\"Joan\",\"surname\":\"Perez\",\"email\":\"j@e.es\"}' http://localhost:8080/techfit/apiFit/usuarios
+curl -X POST -H "Content-Type: application/json" -d '{\"username\":\"Manolo\",\"password\":\"manolocom\",\"uid\":12,\"email\":\"manolo@es.com\",\"nombre\":\"Manolo\",\"apellido\":\"Garcia\"}' http://localhost:8080/techFit/apiFit/usuarios/
 
 # PUT
-curl -X PUT -H "Content-Type: application/json" -d '{\"uid\":27,\"name\":\"Joan\",\"surname\":\"Perez\",\"email\":\"j@e.es\"}' http://localhost:8080/techfit/apiFit/usuarios/27
+curl -X PUT -H "Content-Type: application/json" -d '{"estado":0,"titulo":"habito11","descripcion":"free diving","fechaI":"2017-09-17","fechaF":null,"progreso":0}' http://localhost:8080/techFit/apiFit/habitos/11
 
 # DELETE
 
-curl -X DELETE http://localhost:8080/techFit/apiFit/usuarios/27
+curl -X DELETE http://localhost:8080/techFit/apiFit/usuarios/11

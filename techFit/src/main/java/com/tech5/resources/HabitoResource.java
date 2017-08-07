@@ -31,42 +31,34 @@ import com.tech5.db.HabitoDAO;
 import com.tech5.db.UsuarioDAO;
 
 @Path("/habitos")
-public class HabitoResource extends JSONService{
-	//public static HabitoDAO hDAO = (HabitoDAO) DAOFactory.getInstance().getDAO("habito");
-	
+public class HabitoResource extends JSONService{	
 	private static List<Habito> misHabitos;
-	static {
-		HabitoResource.misHabitos = new ArrayList<Habito>();
-	}
+	static {misHabitos = new ArrayList<Habito>();}
 	
-	//GETS y POST 
-		
-		//Mostrar lista de habitos del usuario por token
+		//GET Mostrar lista de habitos del usuario por token
 		@GET
 		@Path("/")
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response getUserHabitList(@HeaderParam("token") String token)throws Exception{
-			
-			
 			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
 				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				return mResponse;
+				
 			}
 			try {
 				// obtener el objeto usuario completo
 				Usuario user = new Usuario();
 				UsuarioDAO userDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
-				user = userDAO.getUsuario(userEmail, null);
+				user = userDAO.getUsuario(userEmail,null);
 				// existe usuario uid??
 				if (user != null) {
 				// Otener la lista de los habitos de ese usuario
 					//Habito elHabito = new Habito();
 					HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-					HabitoResource.misHabitos = habDAO.getHabitoxUser(user);
+					misHabitos = habDAO.getHabitoxUser(user);
 				} else {
 					throw new RuntimeException("- El usuario (" + userEmail + ") es desconocido.");
 				}
@@ -80,13 +72,13 @@ public class HabitoResource extends JSONService{
 			
 		}
 		
-		//Añadir un habito a la lista
+		//POST Añadir un habito a la lista
 		@Path("/")
 		@POST
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token)throws Exception {
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse=null;
 			
 			try {
@@ -111,35 +103,25 @@ public class HabitoResource extends JSONService{
 						.build();
 				return mResponse;
 			}
-			/*if (userEmail == null) {
-				Message statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
-				mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
-			}else  {
-				HabitoResource.misHabitos.add(nuevoHab);
-				Message statusMessage = new Message(Status.CREATED.getStatusCode(),"Habito Añadido!!!");
-				mResponse=Response.status(200).entity(statusMessage).build();
-			}*/
 
 			return  mResponse;
 
 		}
 		
 		
-		
-	//GET{hid}, PUT{hid}, DELETE{hid}:
-		
-		//GET obtener un habito por su id
+		//GET{hid} obtener un habito por su id
 		@GET
 		@Path("/{hid}")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token)throws Exception{
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token){
+			
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
 				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				return mResponse;
+
 			}
 			try {
 				// Existe habito que se pide?
@@ -162,21 +144,19 @@ public class HabitoResource extends JSONService{
 		}
 		
 		
-		
-		
-		//Modifica un habito de la lista
+		//PUT{hid} Modifica un habito de la lista
 		@Path("/{hid}")
 		@PUT
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response updateHabito(@PathParam("hid") int hid,Habito elHabito, @HeaderParam("token") String token) throws Exception{
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
 				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				return mResponse;
+				
 			}
 			try {
 				// Existe habito que se pide?
@@ -202,18 +182,19 @@ public class HabitoResource extends JSONService{
 			return mResponse;
 		}
 
+		//DELETE{hid} borrar habito por id
 		@Path("/{hid}")
 		@DELETE
 		@Consumes(MediaType.APPLICATION_JSON)
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response deleteHabito(@PathParam("hid") int hid, @HeaderParam("token") String token)throws Exception {
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
 				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
 				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				return mResponse;
+				
 			}
 			try {
 				
@@ -233,19 +214,21 @@ public class HabitoResource extends JSONService{
 			return mResponse;
 			
 		}
+		
+	//Dias
+		//GET{hid}/dias lista de dias por habito
 		@GET
 		@Path("/{hid}/dias")
 		@Produces(MediaType.APPLICATION_JSON)
-		public Response getDiaList(@PathParam("hid") int hid,@HeaderParam("token") String token)throws Exception{
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response getDiaList(@PathParam("hid") int hid ,@HeaderParam("token") String token)throws Exception{
 			
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
+			String userEmail = this.getUserEmailFromToken(token);
 			Response mResponse = null;
 			Message statusMensaje = null;
 			if (userEmail == null) {
 				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				return mResponse;
-		
+				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();		
 			}
 			try {
 				// obtener el objeto Habito completo
@@ -255,10 +238,11 @@ public class HabitoResource extends JSONService{
 				// existe usuario uid??
 				if (habito != null) {
 				// Obtener la lista de los dias de ese habito de un usuario
-					Dia elDia=new Dia();
+					List<Dia> elDia=new ArrayList<Dia>();
+					//Dia unDia= new Dia();
 					DiaDAO diaDAO = (DiaDAO) DAOFactory.getDAO("dia");
-					elDia = (Dia) diaDAO.getDiaListxHabito(hid);
-					return Response.status(200).entity(elDia).build();
+					elDia = (List<Dia>) diaDAO.getDiaListxHabito(habito);
+					mResponse = Response.status(200).entity(elDia).build();
 				} else {
 					throw new RuntimeException("- El habito (" + hid + ") es desconocido.");
 				}
@@ -269,7 +253,7 @@ public class HabitoResource extends JSONService{
 				return mResponse;
 			}
 			
-			
+			return mResponse;
 		}
 		
 }

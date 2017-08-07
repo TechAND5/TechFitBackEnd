@@ -14,112 +14,121 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.tech5.db.DAOFactory;
+import com.tech5.db.UsuarioDAO;
 import com.tech5.models.Message;
 import com.tech5.models.Usuario;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
 
-
 @Path("/usuarios")
 public class UsuarioResource extends JSONService {
-	//public static UsuarioDAO uDAO = (UsuarioDAO) DAOFactory.getInstance().getDAO("usuario");
+
 	private static List<Usuario> misUsuarios;
-	//actua como un singleton todas las llamadas responden a este atributo
-	
-	
-	static{
-		misUsuarios=new ArrayList<Usuario>();
-		misUsuarios.add(new Usuario(1, "diana@es.com", "dianacom", "diana","diana","Ramon"));
-		misUsuarios.add(new Usuario(2, "Juana@es.com", "Juanacom", "juana","juana","juanason"));
-	
-	
+	static {
+		misUsuarios = new ArrayList<Usuario>();
 	}
-	
-	
-	//POST
+
+	// POST inserta un usuario a la lista total de usuarios de la BBDD
 	@Path("/")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response insertUsuario(Usuario nuevoUser,@HeaderParam("token") String token){
-		String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
-		Response mResponse=null;
+	public Response insertUsuario(Usuario nuevoUser, @HeaderParam("token") String token) {
+		String userEmail = this.getUserEmailFromToken(token);
+		Response mResponse = null;
 		if (userEmail == null) {
-			Message statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
-			mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-		}else  {
+			Message statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),
+					"Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+		} else {
 			UsuarioResource.misUsuarios.add(nuevoUser);
-			Message statusMensaje = new Message(Status.CREATED.getStatusCode(),"Usuario Añadido!!!");
-			mResponse=Response.status(200).entity(statusMensaje).build();
+			Message statusMensaje = new Message(Status.CREATED.getStatusCode(), "Usuario Añadido!!!");
+			mResponse = Response.status(200).entity(statusMensaje).build();
 		}
 		return mResponse;
 
 	}
+
+	// GET{uid}: obtiene un usuario por su id
 	
-	//GET y PUT {uid}:
-		@GET
-		@Path("/{uid}")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response getUsuario(@PathParam("uid")int uid, @HeaderParam("token") String token){
-			
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
-			Response mResponse=null;
-			
-			if (userEmail == null) {
-				Message statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
-				mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-			}else  {
-				Usuario unUsuario = new Usuario();
-				for (Usuario user : misUsuarios) {
-					if(user.getUid()==uid){
-						unUsuario=user;
-						break;
-					}
-				}
-			mResponse=Response.status(200).entity(unUsuario).build();
-			}
-			return mResponse;
-		}
-		
-		
-		
-		
-		@Path("/{uid}")
-		@PUT
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response updateUsuario(@PathParam("uid") int uid,Usuario updateUser, @HeaderParam("token") String token) {
-			
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
-			Response mResponse=null;
-			
-			if (userEmail == null) {
-				Message statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),"Access Denied for this functionality !!!");
-				mResponse=Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
-			}else  {
-			
-				for (Usuario user : misUsuarios) {
-					if(user.getUid()==uid){
-						misUsuarios.remove(user);
-						misUsuarios.add(updateUser);
-						break;
-					}
-				}
-				Message statusMessage = new Message(Status.CREATED.getStatusCode(),"Usuario modificado!!!");
-				mResponse=Response.status(200).entity(statusMessage).build();
-			}
-			
-			return mResponse;
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUsuario(@PathParam("uid") int uid, @HeaderParam("token") String token) {
+
+		String userEmail =  this.getUserEmailFromToken(token);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 		}
 
-		/*@Path("/{uid}")
-		@DELETE
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response deleteUsuario(@PathParam("uid") int uid, @HeaderParam("token") String token) {
-			Response delUsuario = null;
-			return delUsuario;
-		}*/
 
+		try {
+			// Existe usuario que se pide?
+			Usuario elUsuario = new Usuario();
+			UsuarioDAO uDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
+			elUsuario = uDAO.getUsuario(uid);
+		  
+		  // existe usuario if (elUsuario != null) { return
+			if (elUsuario != null) {
+				return Response.status(200).entity(elUsuario).build();
+			} else {
+				throw new RuntimeException("- El usuario (" + uid + ") es desconocido.");
+			}
+		} catch (Exception e) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"\n" + e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto usuario.\nLease API");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+		}
+		
+	return mResponse;
 
+	}
+
+	// PUT{uid} actualiza datos de un usuario
+	@Path("/{uid}")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUsuario(@PathParam("uid") int uid, Usuario updateUser, @HeaderParam("token") String token) {
+
+		String userEmail =  this.getUserEmailFromToken(token);
+		Response mResponse = null;
+
+		if (userEmail == null) {
+			Message statusMessage = new Message(Status.FORBIDDEN.getStatusCode(),
+					"Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
+			}
+
+		try {
+			// Existe usuario que se pide?
+			Usuario elUsuario = new Usuario();
+			UsuarioDAO uDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
+			elUsuario = uDAO.getUsuario(uid);
+			// si existe el usuario entonces:
+			if (elUsuario != null) {
+				if (uDAO.updateUsuario(elUsuario)) {
+					Message statusMessage = new Message(Status.CREATED.getStatusCode(), "usuario modificado!!!");
+					mResponse = Response.status(200).entity(statusMessage).build();
+				} else {
+					mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+							.entity(" La modificacion del usuario ha sido cancelada.").build();
+				}
+			} else {
+				mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+						.entity(" El usuario (" + uid + ") es inexistente").build();
+			}
+		} catch (Exception e) {
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+					.entity(e.getMessage() + "Formato erroneo en el cuerpo del objeto usuario. Lease API").build();
+			return mResponse;
+		}
+
+		return mResponse;
+
+		
+	}
 }

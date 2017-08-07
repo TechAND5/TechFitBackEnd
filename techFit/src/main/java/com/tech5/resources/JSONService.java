@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jose4j.jwk.JsonWebKey;
 import org.jose4j.jwk.JsonWebKeySet;
@@ -20,6 +24,13 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
+
+
+import com.sun.jersey.api.client.ClientResponse.Status;
+import com.tech5.db.DAOFactory;
+import com.tech5.db.UsuarioDAO;
+import com.tech5.models.Message;
+import com.tech5.models.Usuario;
 
 
 @Path("/json")
@@ -44,11 +55,41 @@ public class JSONService {
 		}
 
 	}
+	@GET
+	@Path("/owndata")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getOwnData(@HeaderParam("token") String token) {
+		logger.log(Level.INFO, "token:" + token);
+		String userEmail = "";
+
+		userEmail = this.getUserEmailFromToken(token);
+
+		if (userEmail == null) {
+			Message statusMessage = new Message();
+			statusMessage.setStatus(Status.FORBIDDEN.getStatusCode());
+			statusMessage.setBody("Access Denied for this functionality !!!");
+			return Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMessage).build();
+		}
+
+		Usuario user = null;
+		UsuarioDAO userDAO;
+		int uid = 0;
+
+		try {
+			userDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
+			user = userDAO.getUsuarioByMail(userEmail);
+			uid = user.getUid();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return Response.status(200).entity(user).build();
+	}
 
 	/* AUX */
 	protected String getUserEmailFromToken(String token) {
-		if (token == null)
-			return null;
+		if (token == null) {
+			return null;}
 
 		String userEmail = null;
 

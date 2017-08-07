@@ -1,4 +1,3 @@
-
 package com.tech5.db;
 
 
@@ -12,6 +11,7 @@ import java.text.MessageFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
@@ -42,19 +42,19 @@ public class HabitoDAOImplem extends HabitoDAO {
 			pstm.setInt(1, hid);
 
 			ResultSet rs = pstm.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 
-				habitoADevolver = new Habito(
-						rs.getInt("hId"), 
-						rs.getString("titulo"),
-						rs.getString("descripcion"),
-						rs.getDate("fechaI"),
-						rs.getDate("fechaF"),
-						rs.getInt("progreso"),
-						rs.getInt("estado"),
-						rs.getInt("usuario")
+				habitoADevolver = new Habito();
+				habitoADevolver.setHid(rs.getInt("hId")); 
+				habitoADevolver.setTitulo(rs.getString("titulo"));
+				habitoADevolver.setDescripcion(rs.getString("descripcion"));
+				habitoADevolver.setFechaI(rs.getDate("fechaI"));
+				habitoADevolver.setFechaF(rs.getDate("fechaF"));
+				habitoADevolver.setProgreso(rs.getInt("progreso"));
+				habitoADevolver.setEstado(rs.getInt("estado"));
+				habitoADevolver.setUsuario(rs.getInt("usuario"));
+				break;	
 						
-						);
 			}
 
 			pstm.close();
@@ -76,13 +76,8 @@ public class HabitoDAOImplem extends HabitoDAO {
 	public List<Habito> getHabitoxUser(Usuario user) {
 		List<Habito> habitListADevolver = new ArrayList<Habito>();
 		
-		//listADevolver.add(new Habito(1, "correr", "correr 10km al dia", 30, 30, null, uid));
-		//listADevolver.add(new Habito(2, "verdura", "comer 5 verduras al dia", 50, 30, null, uid));
-		//listADevolver.add(new Habito(3, "agua", "beber 2L de agua", 40, 40, null, uid));
-		
 	try {
 		Connection conn = this.datasource.getConnection();
-
 		String sql = "SELECT h.* FROM techfit.habito h LEFT JOIN techfit.usuario u ON h.usuario=u.uId WHERE u.uId=?";
 		java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setInt(1, user.getUid());
@@ -99,7 +94,6 @@ public class HabitoDAOImplem extends HabitoDAO {
 						rs.getInt("progreso"),
 						rs.getInt("estado"),
 						rs.getInt("usuario")
-						
 						));
 			}
 
@@ -118,15 +112,6 @@ public class HabitoDAOImplem extends HabitoDAO {
 	}
 
 	
-
-	/*
-	 //GET obtener la lista de habitos
-	 @Override
-	public List<Habito> getHabitoList() {
-
-		return null;
-	}*/
-	
 	//POST insertar nuevo habito a la lista de habitos de un usuario
 	@Override
 	public boolean insertHabito(Habito nuevoHab) throws Exception {
@@ -136,16 +121,17 @@ public class HabitoDAOImplem extends HabitoDAO {
 		
 		try {
 			conn = this.datasource.getConnection();
-			String sql = "INSERT INTO techfit.habito ('hid', 'titulo', 'descripcion', 'fechaI', 'fechaF', 'progreso','estado', 'usuario') VALUES (?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO techfit.habito('hId', 'titulo', 'descripcion', 'fechaI', 'fechaF', 'progreso', 'estado', 'usuario') VALUES (?, ?, ?, ?, ?, ?, ?, ? );";
 			pstm = conn.prepareStatement(sql);
 			
 			pstm.setInt(1,nuevoHab.getHid()); 
 			pstm.setString(2,nuevoHab.getTitulo());
 			pstm.setString(3,nuevoHab.getDescripcion());
 			pstm.setDate(4,(Date)nuevoHab.getFechaI());
-			pstm.setInt(5,nuevoHab.getProgreso());
-			pstm.setInt(6,nuevoHab.getEstado());
-			pstm.setInt(7,nuevoHab.getUsuario());
+			pstm.setDate(5,(Date)nuevoHab.getFechaF());
+			pstm.setInt(6,nuevoHab.getProgreso());
+			pstm.setInt(7,nuevoHab.getEstado());
+			pstm.setInt(8,nuevoHab.getUsuario());
 
 			
 			// execute the preparedstatement
@@ -188,6 +174,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 		
 		
 		
+		
 		pstm.executeUpdate();
 		
 		try {
@@ -195,7 +182,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 				throw new Exception(MessageFormat.format("Nigun Objeto esta actualizado \"{0}\"", sql));
 			} else {
 				estaActualizado = true;
-				logger.info("Conexión exitosa updateTarea");
+				logger.info("Conexión exitosa updatehabito");
 			}
 			pstm.close();
 			conn.close();

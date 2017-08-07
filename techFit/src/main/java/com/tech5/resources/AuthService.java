@@ -33,15 +33,15 @@ public class AuthService extends JSONService{
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response authenticateCredentials(@HeaderParam("username") String username,
+	public Response authenticateCredentials(@HeaderParam("username") String email,
 			@HeaderParam("password") String password)
 			throws JsonGenerationException, JsonMappingException, IOException {
-		logger.info("Authenticating User Credentials...:"+username+":"+password);
+		logger.info("Authenticating User Credentials...:"+email+":"+password);
 
-		if (username == null) {
+		if (email == null) {
 			Message statusMessage = new Message();
 			statusMessage.setStatus(Status.PRECONDITION_FAILED.getStatusCode());
-			statusMessage.setBody("Username value is missing!!!");
+			statusMessage.setBody("email value is missing!!!");
 			return Response.status(Status.PRECONDITION_FAILED.getStatusCode()).entity(statusMessage).build();
 			
 					}
@@ -57,7 +57,7 @@ public class AuthService extends JSONService{
 		UsuarioDAO usuarioDAO;
 		try {
 			usuarioDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
-			user = usuarioDAO.getUsuario(username, password);
+			user = usuarioDAO.getUsuario(email, password);
 			logger.log(Level.INFO, "user:" + user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,3 +84,4 @@ public class AuthService extends JSONService{
 	return Response.status(200).entity(jwt).build();
 	}
 }
+
