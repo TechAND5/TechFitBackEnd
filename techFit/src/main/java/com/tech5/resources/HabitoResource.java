@@ -1,6 +1,5 @@
 package com.tech5.resources;
 
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,247 +12,214 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.Response.Status;
-
-
 
 import com.tech5.models.Dia;
 import com.tech5.models.Habito;
 import com.tech5.models.Message;
 import com.tech5.models.Usuario;
+
 import com.tech5.db.DAOFactory;
 import com.tech5.db.DiaDAO;
 import com.tech5.db.HabitoDAO;
 import com.tech5.db.UsuarioDAO;
 
 @Path("/habitos")
-public class HabitoResource extends JSONService{	
-	private static List<Habito> misHabitos;
-	static {misHabitos = new ArrayList<Habito>();}
-	
-		//GET Mostrar lista de habitos del usuario por token
-		@GET
-		@Path("/")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response getUserHabitList(@HeaderParam("token") String token)throws Exception{
-			String userEmail = "diana@es.com";//this.getUserEmailFromToken(token);
-			Response mResponse = null;
-			Message statusMensaje = null;
-			if (userEmail == null) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				
-			}
-			try {
-				// obtener el objeto usuario completo
-				Usuario user = new Usuario();
-				UsuarioDAO userDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
-				user = userDAO.getUsuario(userEmail,null);
-				// existe usuario uid??
-				if (user != null) {
-				// Otener la lista de los habitos de ese usuario
-					//Habito elHabito = new Habito();
-					HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-					misHabitos = habDAO.getHabitoxUser(user);
-				} else {
-					throw new RuntimeException("- El usuario (" + userEmail + ") es desconocido.");
-				}
-				mResponse = Response.status(200).entity(HabitoResource.misHabitos).build();
-				return mResponse;
-			} catch (Exception e) {
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto USUARIO.\nLease API").build();
-				return mResponse;
-			}
-			
-			
+public class HabitoResource extends JSONService {
+	private static Logger logger = Logger.getLogger("HabitoResource");
+
+	private static List<Habito> misHabitos = new ArrayList<Habito>();
+
+
+
+	// POST Añadir un habito a la lista
+
+	@POST
+	@Path("/")
+
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token) throws Exception {
+		String userEmail = this.getUserEmailFromToken(token);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 		}
-		
-		//POST Añadir un habito a la lista
-		@Path("/")
-		@POST
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response insertHabito(Habito nuevoHab, @HeaderParam("token") String token)throws Exception {
-			String userEmail = this.getUserEmailFromToken(token);
-			Response mResponse=null;
-			
+		try {
+
+			nuevoHab = new Habito();
+			HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
+			habDAO.insertHabito(nuevoHab);
+
+			mResponse = Response.status(200).entity("El habito esta añadido").build();
+		} catch (Exception e) {
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+					.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto Habito.\nLease API").build();
+
+		}
+
+		return mResponse;
+
+	}
+
+	// GET{hid} obtener un habito por su id
+	@GET
+	@Path("/{hid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getHabito(@PathParam("hid") int hid, @HeaderParam("token") String token) {
+
+		String userEmail = this.getUserEmailFromToken(token);
+		System.out.println("***Email..." + userEmail);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+
+		}
+		try {
+			// Existe habito que se pide?
+			Habito elHabito = new Habito();
+			HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
+			elHabito = habDAO.getHabito(hid);
+			System.out.println("***user..." + elHabito);
+
+			// existe habito
+			if (elHabito != null) {
+				
+				mResponse = Response.status(200).entity(elHabito).build();
+				System.out.println("habito obtenido!!!!");
+			} else {
+				throw new RuntimeException("- El Habito (" + hid + ") es desconocido.");
+			}
+		} catch (Exception e) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),
+					"\n" + e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto Habito.\nLease API");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+		}
+
+		return mResponse;
+	}
+
+	// PUT{hid} Modifica un habito de la lista
+	@Path("/{hid}")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateHabito(@PathParam("hid") int hid, Habito elHabito, @HeaderParam("token") String token)
+			throws Exception {
+		String userEmail = this.getUserEmailFromToken(token);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+
+		} else {
 			try {
-				// obtener el objeto usuario completo
-				Usuario elUsuario = new Usuario();
-				UsuarioDAO userDAO = (UsuarioDAO) DAOFactory.getDAO("usuario");
-				elUsuario = userDAO.getUsuario(userEmail, null);
-				if (elUsuario != null) {
-					nuevoHab = new Habito();
-					HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-					if (habDAO.insertHabito(nuevoHab)) {
-						mResponse = Response.status(200).entity("El habito esta añadido").build();
-					} else {
-						mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity("Operacion sin actualizar").build();
-					}
-				} else {
-					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity("El usuario no existe").build();
-				}
+				elHabito = new Habito();
+				HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
+				habDAO.updateHabito(hid, elHabito);
+				Message statusMessage = new Message(Status.CREATED.getStatusCode(), "Habito modificado!!!");
+				mResponse = Response.status(200).entity(statusMessage).build();
 
 			} catch (Exception e) {
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto Habito.\nLease API")
+				mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+						.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto habito.\nLease API")
 						.build();
 				return mResponse;
 			}
-
-			return  mResponse;
-
 		}
-		
-		
-		//GET{hid} obtener un habito por su id
-		@GET
-		@Path("/{hid}")
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response getHabito(@PathParam("hid")int hid, @HeaderParam("token") String token){
-			
-			String userEmail = this.getUserEmailFromToken(token);
-			Response mResponse = null;
-			Message statusMensaje = null;
-			if (userEmail == null) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+		return mResponse;
+	}
 
-			}
-			try {
-				// Existe habito que se pide?
-				Habito elHabito = new Habito();
-				HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-				elHabito = habDAO.getHabito(hid);
-			
-				// existe habito
-				if (elHabito != null) {
-					return Response.status(200).entity(elHabito).build();
-				} else {
-					throw new RuntimeException("- El Habito (" + hid + ") es desconocido.");
-				}
-			} catch (Exception e) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"\n" + e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto Habito.\nLease API");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-			}
-			
-			return mResponse;
-		}
-		
-		
-		//PUT{hid} Modifica un habito de la lista
-		@Path("/{hid}")
-		@PUT
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response updateHabito(@PathParam("hid") int hid,Habito elHabito, @HeaderParam("token") String token) throws Exception{
-			String userEmail = this.getUserEmailFromToken(token);
-			Response mResponse = null;
-			Message statusMensaje = null;
-			if (userEmail == null) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				
-			}
-			try {
-				// Existe habito que se pide?
-				elHabito = new Habito();
-				HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-				elHabito = habDAO.getHabito(hid);
-				//si existe habito
-				if (elHabito != null) {					
-					if (habDAO.updateHabito(hid,elHabito)) {
-						Message statusMessage = new Message(Status.CREATED.getStatusCode(),"Habito modificado!!!");
-						mResponse=Response.status(200).entity(statusMessage).build();
-					} else {
-						mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity("\n- La modificacion del habito ha sido cancelada.").build();
-					}
-				} else {
-					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity("\n- El habito (" + hid + ") es inexistente").build();
-				}
-			} catch (Exception e) {
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto habito.\nLease API").build();
-				return mResponse;
-			}			
-			
-			return mResponse;
-		}
+	// DELETE{hid} borrar habito por id
+	@Path("/{hid}")
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteHabito(@PathParam("hid") int hid, @HeaderParam("token") String token) throws Exception {
+		String userEmail = this.getUserEmailFromToken(token);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 
-		//DELETE{hid} borrar habito por id
-		@Path("/{hid}")
-		@DELETE
-		@Consumes(MediaType.APPLICATION_JSON)
-		@Produces(MediaType.APPLICATION_JSON)
-		public Response deleteHabito(@PathParam("hid") int hid, @HeaderParam("token") String token)throws Exception {
-			String userEmail = this.getUserEmailFromToken(token);
-			Response mResponse = null;
-			Message statusMensaje = null;
-			if (userEmail == null) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-				
-			}
+		} else {
 			try {
-				
-				Habito elHabito = new Habito();
 				HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
-				elHabito = habDAO.getHabito(hid);
-				if (elHabito != null) {
+				if (habDAO != null) {
+					habDAO.delHabito(hid);
+
 					statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Habito borrado");
 					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
-					
-				}			
-			} catch (Exception e) {
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto habito.\nLease API").build();
-				return mResponse;
-			}
-			mResponse = Response.status(200).entity("\n- Se ha borrado un habito de la lista.").build();	
-			return mResponse;
-			
-		}
-		
-	//Dias
-		//GET{hid}/dias lista de dias por habito
-		@GET
-		@Path("/{hid}/dias")
-		@Produces(MediaType.APPLICATION_JSON)
-		@Consumes(MediaType.APPLICATION_JSON)
-		public Response getDiaList(@PathParam("hid") int hid ,@HeaderParam("token") String token)throws Exception{
-			
-			String userEmail = this.getUserEmailFromToken(token);
-			Response mResponse = null;
-			Message statusMensaje = null;
-			if (userEmail == null) {
-				statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),	"Access Denied for this functionality !!!");
-				mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();		
-			}
-			try {
-				// obtener el objeto Habito completo
-				Habito habito= new Habito();
-				HabitoDAO habDAO=(HabitoDAO) DAOFactory.getDAO("habito");
-				habito= habDAO.getHabito(hid);
-				// existe usuario uid??
-				if (habito != null) {
-				// Obtener la lista de los dias de ese habito de un usuario
-					List<Dia> elDia=new ArrayList<Dia>();
-					//Dia unDia= new Dia();
-					DiaDAO diaDAO = (DiaDAO) DAOFactory.getDAO("dia");
-					elDia = (List<Dia>) diaDAO.getDiaListxHabito(habito);
-					mResponse = Response.status(200).entity(elDia).build();
 				} else {
-					throw new RuntimeException("- El habito (" + hid + ") es desconocido.");
+					statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(),
+							"el habito ya ha sido borrado o no existe");
+					mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
 				}
-				
 			} catch (Exception e) {
-				mResponse = Response.status(499)
-						.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto dia.\nLease API").build();
+				mResponse = Response.status(Status.FORBIDDEN.getStatusCode())
+						.entity(e.getMessage() + "el habito no se ha borrado").build();
 				return mResponse;
 			}
-			
-			return mResponse;
+			mResponse = Response.status(200).entity("\n- el habito" + hid + "Se ha borrado un habito de la lista.")
+					.build();
 		}
-		
+		return mResponse;
+
+	}
+
+	// Dias
+	// GET{hid}/dias lista de dias por habito
+	@GET
+	@Path("/{hid}/dias")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getDiaList(@PathParam("hid") int hid, @HeaderParam("token") String token) throws Exception {
+
+		String userEmail = this.getUserEmailFromToken(token);
+		Response mResponse = null;
+		Message statusMensaje = null;
+		if (userEmail == null) {
+			statusMensaje = new Message(Status.FORBIDDEN.getStatusCode(), "Access Denied for this functionality !!!");
+			mResponse = Response.status(Status.FORBIDDEN.getStatusCode()).entity(statusMensaje).build();
+		}
+		try {
+			// obtener el objeto Habito completo
+			Habito habito = new Habito();
+			HabitoDAO habDAO = (HabitoDAO) DAOFactory.getDAO("habito");
+			habito = habDAO.getHabito(hid);
+			//List<Dia> elDia = habito.getListaDias();
+			// existe usuario uid??
+			if (habito != null) {
+				List<Dia> elDia = new ArrayList<Dia>();
+				DiaDAO diaDAO = (DiaDAO) DAOFactory.getDAO("dia");
+				elDia =diaDAO.getDiaListxHabito(habito);
+				
+				//elDia .add(new Dia(1));
+				//elDia .add(new Dia(2));
+				//elDia .add(new Dia(3));
+				
+				
+				
+				statusMensaje = new Message(Status.CREATED.getStatusCode(),"lista de dias obtenida!!!");
+				mResponse = Response.status(200).entity(elDia).build();
+			} 
+			
+		} catch (Exception e) {
+			mResponse = Response.status(499)
+					.entity(e.getMessage() + "\n- Formato erroneo en el cuerpo del objeto dia.\nLease API").build();
+
+		}
+
+		return mResponse;
+	}
+
 }

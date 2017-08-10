@@ -1,6 +1,5 @@
 package com.tech5.db;
 
-
 import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,13 +11,12 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.tech5.models.Habito;
 import com.tech5.models.Usuario;
 
 public class HabitoDAOImplem extends HabitoDAO {
 	private static Logger logger = Logger.getLogger("HabitoDAOImplem");
-	
+
 	private static HabitoDAOImplem instance = null;
 
 	public static HabitoDAOImplem getInstance() {
@@ -27,17 +25,17 @@ public class HabitoDAOImplem extends HabitoDAO {
 		}
 		return instance;
 	}
-	
-	
-	
-	//get{id}-obtener un habito por hid
+
+	// get{id}-obtener un habito por hid
 	@Override
 	public Habito getHabito(int hid) {
 		Habito habitoADevolver = null;
+		String listaDias;
+		listaDias="('11/08/2017','12/08/2017','13/08/2017')";
 		try {
 			Connection conn = this.datasource.getConnection();
 			// ordenes sql
-			String sql = "SELECT h.* FROM techfit.habito h WHERE h.hId=? LIMIT 1 "; 
+			String sql = "SELECT h.* FROM techfit.habito h WHERE h.hId=? LIMIT 1 ";
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, hid);
 
@@ -45,7 +43,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 			while (rs.next()) {
 
 				habitoADevolver = new Habito();
-				habitoADevolver.setHid(rs.getInt("hId")); 
+				habitoADevolver.setHid(rs.getInt("hId"));
 				habitoADevolver.setTitulo(rs.getString("titulo"));
 				habitoADevolver.setDescripcion(rs.getString("descripcion"));
 				habitoADevolver.setFechaI(rs.getDate("fechaI"));
@@ -53,13 +51,14 @@ public class HabitoDAOImplem extends HabitoDAO {
 				habitoADevolver.setProgreso(rs.getInt("progreso"));
 				habitoADevolver.setEstado(rs.getInt("estado"));
 				habitoADevolver.setUsuario(rs.getInt("usuario"));
-				break;	
-						
+				habitoADevolver.setListaDias(listaDias);
+				break;
+
 			}
 
 			pstm.close();
 			conn.close();
-			
+
 			logger.info("Conexión exitosa getHabito");
 
 		} catch (Exception e) {
@@ -70,70 +69,71 @@ public class HabitoDAOImplem extends HabitoDAO {
 		return habitoADevolver;
 
 	}
-	
-	//GET -Obtener lista de habitos x id usuario:
+
+	// GET -Obtener lista de habitos x id usuario:
 	@Override
 	public List<Habito> getHabitoxUser(Usuario user) {
 		List<Habito> habitListADevolver = new ArrayList<Habito>();
 		
-	try {
-		Connection conn = this.datasource.getConnection();
-		String sql = "SELECT h.* FROM techfit.habito h LEFT JOIN techfit.usuario u ON h.usuario=u.uId WHERE u.uId=?";
-		java.sql.PreparedStatement pstm = conn.prepareStatement(sql);
-		pstm.setInt(1, user.getUid());
+		String listaDias;
+		listaDias="('11/08/2017','12/08/2017','12/08/2017')";
+
+		try {
+			Connection conn = this.datasource.getConnection();
+			String sql = "SELECT h.* FROM techfit.habito h LEFT JOIN techfit.usuario u ON h.usuario=u.uId WHERE u.uId=?";
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, user.getUid());
 			ResultSet rs = pstm.executeQuery();
+			
+			while (rs.next()) {
 
-			while  (rs.next()) {
-
-				habitListADevolver.add( new Habito(
+				habitListADevolver.add(
+						new Habito(
 						rs.getInt("hId"), 
-						rs.getString("titulo"),
+						rs.getString("titulo"), 
 						rs.getString("descripcion"),
-						rs.getDate("fechaI"),
-						rs.getDate("fechaF"),
-						rs.getInt("progreso"),
+						rs.getDate("fechaI"), 
+						rs.getDate("fechaF"), 
+						rs.getInt("progreso"), 
 						rs.getInt("estado"),
-						rs.getInt("usuario")
-						));
+						rs.getInt("usuario"),
+						listaDias));
 			}
 
 			pstm.close();
-
 			conn.close();
 
 			logger.info("Conexión exitosa: getUserHabito");
-
 		} catch (Exception e) {
-			logger.severe("Error en la conexión de BBDD:" + e);
-			habitListADevolver= null;
-	}
+			logger.severe("Error en la conexión de BBDD en getHabitoxuser:" + e);
+			habitListADevolver = null;
+		}
 
 		return habitListADevolver;
 	}
 
-	
-	//POST insertar nuevo habito a la lista de habitos de un usuario
+	// POST insertar nuevo habito a la lista de habitos de un usuario
 	@Override
 	public boolean insertHabito(Habito nuevoHab) throws Exception {
 		boolean estaInsertado = false;
+		
 		PreparedStatement pstm = null;
 		Connection conn = null;
-		
+
 		try {
 			conn = this.datasource.getConnection();
-			String sql = "INSERT INTO techfit.habito('hId', 'titulo', 'descripcion', 'fechaI', 'fechaF', 'progreso', 'estado', 'usuario') VALUES (?, ?, ?, ?, ?, ?, ?, ? );";
+			String sql = "INSERT INTO techfit.habito (hId, titulo, descripcion, fechaI, fechaF, progreso, estado, usuario) VALUES (?,?,?,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
-			
-			pstm.setInt(1,nuevoHab.getHid()); 
-			pstm.setString(2,nuevoHab.getTitulo());
-			pstm.setString(3,nuevoHab.getDescripcion());
-			pstm.setDate(4,(Date)nuevoHab.getFechaI());
-			pstm.setDate(5,(Date)nuevoHab.getFechaF());
-			pstm.setInt(6,nuevoHab.getProgreso());
-			pstm.setInt(7,nuevoHab.getEstado());
-			pstm.setInt(8,nuevoHab.getUsuario());
 
-			
+			pstm.setInt(1, nuevoHab.getHid());
+			pstm.setString(2, nuevoHab.getTitulo());
+			pstm.setString(3, nuevoHab.getDescripcion());
+			pstm.setDate(4, (Date) nuevoHab.getFechaI());
+			pstm.setDate(5, (Date) nuevoHab.getFechaF());
+			pstm.setInt(6, nuevoHab.getProgreso());
+			pstm.setInt(7, nuevoHab.getEstado());
+			pstm.setInt(8, nuevoHab.getUsuario());
+
 			// execute the preparedstatement
 			int rows = pstm.executeUpdate();
 			if (pstm.getUpdateCount() == 0) {
@@ -148,35 +148,32 @@ public class HabitoDAOImplem extends HabitoDAO {
 			estaInsertado = rows > 0 ? true : false;
 		} catch (Exception e) {
 			logger.severe("Error en la conexión de BBDD:" + e);
-		} 
+		}
 		return estaInsertado;
 
 	}
 
-	
-	//PUT{id} actualizar datos de un habito
+	// PUT{id} actualizar datos de un habito
 	@Override
-	public boolean updateHabito(int hid,Habito elHabito) throws Exception {
+	public boolean updateHabito(int hid, Habito elHabito) throws Exception {
 		boolean estaActualizado = false;
 		PreparedStatement pstm = null;
 		Connection conn = null;
 
 		conn = this.datasource.getConnection();
-		String sql ="UPDATE techfit.habito SET titulo=?, descripcion=?, fechaI=?, fechaF=?, progreso=?, estado=? WHERE hId=?";
-		
+		String sql = "UPDATE techfit.habito h SET titulo=?, descripcion=?, fechaI=?, fechaF=?, progreso=?, estado=? WHERE hId=?";
+
 		pstm = conn.prepareStatement(sql);
-		pstm.setString(1,elHabito.getTitulo());
-		pstm.setString(2,elHabito.getDescripcion());
-		pstm.setDate(3,(Date) elHabito.getFechaI());
-		pstm.setDate(4,(Date) elHabito.getFechaF());
-		pstm.setInt(5,elHabito.getProgreso());
-		pstm.setInt(6,elHabito.getEstado());
-		
-		
-		
-		
+		pstm.setString(1, elHabito.getTitulo());
+		pstm.setString(2, elHabito.getDescripcion());
+		pstm.setDate(3, (Date) elHabito.getFechaI());
+		pstm.setDate(4, (Date) elHabito.getFechaF());
+		pstm.setInt(5, elHabito.getProgreso());
+		pstm.setInt(6, elHabito.getEstado());
+		pstm.setInt(7, elHabito.getHid());
+
 		pstm.executeUpdate();
-		
+
 		try {
 			if (pstm.getUpdateCount() == 0) {
 				throw new Exception(MessageFormat.format("Nigun Objeto esta actualizado \"{0}\"", sql));
@@ -194,9 +191,8 @@ public class HabitoDAOImplem extends HabitoDAO {
 
 		return estaActualizado;
 	}
-	
-	
-	//DELETE{id} borrar un habito
+
+	// DELETE{id} borrar un habito
 	@Override
 	public boolean delHabito(int hid) throws Exception {
 		boolean estaBorrado = false;
@@ -204,7 +200,7 @@ public class HabitoDAOImplem extends HabitoDAO {
 		Connection conn = null;
 		try {
 			conn = this.datasource.getConnection();
-			String sql = "DELETE h.* FROM techfit.habito WHERE hId=?;";
+			String sql = "DELETE FROM techfit.habito WHERE hId=?";
 			pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, hid);
 
@@ -222,11 +218,9 @@ public class HabitoDAOImplem extends HabitoDAO {
 			pstm.close();
 
 			conn.close();
-		};		
+		}
+
 		return estaBorrado;
 	}
-
-	
-	
 
 }

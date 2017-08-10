@@ -21,6 +21,9 @@ public class Dia {
 		this.habito = habito;
 	}
 
+	public Dia(int did) {
+		this.did = did;
+	}
 	public Dia() {
 		
 	}

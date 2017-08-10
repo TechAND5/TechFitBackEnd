@@ -128,7 +128,7 @@ public class JSONService {
 		// who creates the token and signs it
 		claims.setIssuer("tech5.com");
 		// token will expire (30 minutes from now)
-		claims.setExpirationTimeMinutesInTheFuture(30);
+		claims.setExpirationTimeMinutesInTheFuture(90);
 		// a unique identifier for the token
 		claims.setGeneratedJwtId();
 		// when the token was issued/created (now)

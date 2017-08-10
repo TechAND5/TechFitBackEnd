@@ -22,85 +22,87 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 	}
 
 	@Override
-	public Usuario getUsuario(String email, String password) {
-		Usuario aUser = null;
-
-		try {
-
-			Connection conn = datasource.getConnection();
-			PreparedStatement pstm = null;
-			// ordenes sql
-			if (password == null) {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? LIMIT 1;";
-				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, email);
-			} else {
-				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? AND password=? LIMIT 1;";
-				pstm = conn.prepareStatement(sql);
-				pstm.setString(1, email);
-				pstm.setString(2, password);
-			}
-
-			ResultSet rs = pstm.executeQuery();
-
-			while (rs.next()) {
-				aUser = new Usuario();
-				aUser.setUid(rs.getInt("uId"));
-				aUser.setEmail(rs.getString("email"));
-				aUser.setPassword(rs.getString("password"));
-				aUser.setUsername(rs.getString("username"));
-				aUser.setNombre(rs.getString("nombre"));
-				aUser.setApellido(rs.getString("apellido"));
-				break;
-			}
-
-			pstm.close();
-			conn.close();
-
-		} catch (Exception e) {
-			logger.severe("Error en la conexión de BBDD:" + e);
-			aUser = null;
-		}
-
-		return aUser;
-	}
-	
-	@Override
-	public Usuario getUsuarioByMail(String email) throws Exception {
-		Usuario aUser = null;
+	public Usuario getUsuario(String email, String password)throws Exception {
+		Usuario usuarioADevolver = null;
+		
 		try {
 			Connection conn = datasource.getConnection();
 			PreparedStatement pstm = null;
 			
-			String sql = "SELECT u.* FROM techfit.usuario u WHERE email=?";
-			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, email);
+			// ordenes sql
+			if (password == null) {
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? LIMIT 1";
+				pstm = conn.prepareStatement(sql);
+				pstm.setString(1, email);
+				System.out.println("***email..." + email);
+			} else {
+				String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? AND u.password=? LIMIT 1";
+				pstm = conn.prepareStatement(sql);
+				pstm.setString(1, email);
+				pstm.setString(2, password);
+				System.out.println("***email+pass..." + email + password);
+			}
 
 			ResultSet rs = pstm.executeQuery();
-			while (rs.next()) {
-				aUser = new Usuario();
-				aUser.setUid(rs.getInt("uId"));
-				aUser.setEmail(rs.getString("email"));
-				aUser.setPassword(rs.getString("password"));
-				aUser.setUsername(rs.getString("username"));
-				aUser.setNombre(rs.getString("nombre"));
-				aUser.setApellido(rs.getString("apellido"));
-				break;
+
+			if (rs.next()) {
+				usuarioADevolver = new Usuario(
+						rs.getInt("uId"), 
+						rs.getString("email"),
+						rs.getString("password"),
+						rs.getString("username"),
+						rs.getString("nombre"), 
+						rs.getString("apellido"));
 			}
 
 			pstm.close();
 			conn.close();
+
 		} catch (Exception e) {
 			logger.severe("Error en la conexión de BBDD:" + e);
-			aUser = null;
+			usuarioADevolver = null;
 		}
+		return usuarioADevolver;
+	}
+	
+	
+	@Override
+	public Usuario getUsuarioByMail(String email) throws Exception {
+		Usuario usuarioADevolver = null;
+		try {
+			Connection conn = datasource.getConnection();
+			PreparedStatement pstm = null;
 
-		return aUser;
+			// ordenes sql
+			String sql = "SELECT u.* FROM techfit.usuario u WHERE u.email=? LIMIT 1";
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, email);
+
+			ResultSet rs = pstm.executeQuery();
+
+			if (rs.next()) {
+				usuarioADevolver = new Usuario(
+						rs.getInt("uId"), 
+						rs.getString("email"),
+						rs.getString("password"),
+						rs.getString("username"),
+						rs.getString("nombre"), 
+						rs.getString("apellido"));
+			}
+
+			pstm.close();
+			conn.close();
+
+		} catch (Exception e) {
+			logger.severe("Error en la conexión de BBDD:" + e);
+			usuarioADevolver = null;
+		}
+		return usuarioADevolver;
 	}
 
 
 	@Override
-	public Usuario getUsuario(int uid) {
+	public Usuario getUsuario(int uid)throws Exception {
 		Usuario usuarioADevolver = null;
 		try {
 			Connection conn = datasource.getConnection();
@@ -134,21 +136,23 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 	}
 
 	@Override
-	public boolean insertUsuario(Usuario nuevoUsuario) {
+	public boolean insertUsuario(Usuario nuevoUsuario)throws Exception {
 		boolean exito = false;
-
+		nuevoUsuario=new Usuario();
+		Connection conn = this.datasource.getConnection();
+		
 		try {
-
-			Connection conn = this.datasource.getConnection();
 			PreparedStatement pstm = null;
+			
 			// ordenes sql
-			String sql = "INSERT INTO u.* FROM techfit.usuario u VALUES(NULL,?,?,?,?,?)";
+			String sql = "INSERT INTO techfit.usuario (uId, email, password, username, nombre, apellido) VALUES (?,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, nuevoUsuario.getEmail());
-			pstm.setString(2, nuevoUsuario.getPassword());
-			pstm.setString(3, nuevoUsuario.getUsername());
-			pstm.setString(4, nuevoUsuario.getNombre());
-			pstm.setString(5, nuevoUsuario.getApellido());
+			pstm.setInt(1, nuevoUsuario.getUid());
+			pstm.setString(2, nuevoUsuario.getEmail());
+			pstm.setString(3, nuevoUsuario.getPassword());
+			pstm.setString(4, nuevoUsuario.getUsername());
+			pstm.setString(5, nuevoUsuario.getNombre());
+			pstm.setString(6, nuevoUsuario.getApellido());
 
 			int rs = pstm.executeUpdate();
 
@@ -165,9 +169,9 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 	}
 
 	@Override
-	public boolean updateUsuario(Usuario usuario) {
+	public boolean updateUsuario(Usuario usuario)throws Exception {
 		boolean exito = false;
-
+		usuario=new Usuario();
 		try {
 
 			Connection conn = this.datasource.getConnection();
@@ -175,12 +179,12 @@ public class UsuarioDAOImplem extends UsuarioDAO {
 			// ordenes sql
 			String sql = "UPDATE techfit.usuario u SET u.email=?, u.password=?, u.username=?, u.nombre=?, u.apellido=? WHERE u.uId=?";
 			pstm = conn.prepareStatement(sql);
-			pstm.setString(1, "email");
-			pstm.setString(2, "password");
-			pstm.setString(3, "username");
-			pstm.setString(4, "nombre");
-			pstm.setString(5, "apellido");
-			pstm.setString(6, "uId");
+			pstm.setString(1, usuario.getEmail());
+			pstm.setString(2, usuario.getPassword());
+			pstm.setString(3, usuario.getUsername());
+			pstm.setString(4, usuario.getNombre());
+			pstm.setString(5, usuario.getApellido());
+			pstm.setInt(6, usuario.getUid());
 
 			int rs = pstm.executeUpdate();
 

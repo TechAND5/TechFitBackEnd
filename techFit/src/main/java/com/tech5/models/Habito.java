@@ -1,6 +1,8 @@
 package com.tech5.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Habito {
 
@@ -13,12 +15,29 @@ public class Habito {
 	private int progreso;
 	private int estado;
 	private int usuario;
+	private String listaDias;
 	
 
 	//Constructor
 	public Habito(){}
 	
 	
+	public Habito(int hid, String titulo, String descripcion,Date fechaI,Date fechaF, int progreso, int estado,int usuario,String listaDias) {
+		super();
+		this.hid = hid;
+		this.titulo = titulo;
+		this.descripcion = descripcion;
+		this.fechaI = fechaI;
+		this.progreso = progreso;
+		this.estado = estado;
+		this.usuario = usuario;	
+		this.listaDias=listaDias;
+		
+		
+		
+		
+	}
+
 	public Habito(int hid, String titulo, String descripcion,Date fechaI,Date fechaF, int progreso, int estado,int usuario) {
 		super();
 		this.hid = hid;
@@ -27,11 +46,9 @@ public class Habito {
 		this.fechaI = fechaI;
 		this.progreso = progreso;
 		this.estado = estado;
-		this.usuario = usuario;		
+		this.usuario = usuario;	
+		
 	}
-
-	
-
 
 	//Getters&Setters
 	public int getHid() {
@@ -101,5 +118,17 @@ public class Habito {
 	public void setFechaF(Date fechaF) {
 		this.fechaF = fechaF;
 	}
+
+
+	public String getListaDias() {
+		return listaDias;
+	}
+
+
+	public void setListaDias(String listaDias) {
+		this.listaDias = listaDias;
+	}
+
+
 	
 }

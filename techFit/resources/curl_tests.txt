@@ -1,25 +1,40 @@
 #AUTENTICACIÓN 
-curl -H "Content-Type: application/json" -H "username: diana@es.com" -H "password: dianacom" -v -X GET  http://localhost:8080/techFit/apiFit/authenticate
+curl -H "Content-Type: application/json" -H "email: diana@es.com" -H "password: dianacom" -v -X GET  http://localhost:8080/techFit/apiFit/authenticate
 
 
 #Envio de token para acceder a zona restringida
-curl -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIwOTk4NDgsImp0aSI6Im5XV0Z3TTVrXzZjYmoyczRKNm5PbWciLCJpYXQiOjE1MDIwOTgwNDgsIm5iZiI6MTUwMjA5NzkyOCwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.KIbWwuvBiPO6VyqxzKl7EZW9nWoEreDShjr948njV7_UOsg9yRPGsgU7jAdEly52sP8Dx4FYWgIad5L15Jf3zz2ANL_l32bbX0GGGtI0GxxL8F918T-Hn0ftS1fbTnGRtrxIJAnbi-SQ7OsnyNmlQlKHYDPq_1aMpCH_q6GhnwZmfDJcwSjr833LPsl-TY4mDxBhTb1IBWUPx66zVyXmes8rvdlZvtHh4Lpc3ow4vDNukNaDvaNOEaFXjClGEdjrdl47Rdro7xfBzTLOTdouP3QGvJWGSU-BsycZdeGMh33cUNijeCjI27XnMv_9F3EAW6QSIWwwPKCm9fnxpk83hw" -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
+curl -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzNzkxMjksImp0aSI6IkdLenRVdkZxcFlnY3luQzV1aWYwWHciLCJpYXQiOjE1MDIzNzM3MjksIm5iZiI6MTUwMjM3MzYwOSwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.l1mjEha8vYaQIRWhCJJmOTHWF-8CTuPxmlQhZQaPjqYMbOtw3JP0i-uETHeVjSWnwJyb2FCvroqxeHWSXbSaznoGHg0E73elHbyep3GtJjp_DrNyxiwzfavIrM7exUCh76mBXQMag1QlkSZo45JVvWExqIC82EXssuPSopZXcXBaeVDg5v9BOTItxpxB9s1nRi2JWzTgpYCUgoSwwCbJoqVF0sKPoCSa1KMmlUh1qp4R9MegMrFtpEnL4wFdmp0t2PLKKN0cn0mj5J0p1HrC4bdFbmclan6IR6HT_QXbp4olgQuQg1FIISpOSebkTKuh9S3hqcbQ6C625dS5BAffLg" -v -X GET http://localhost:8080/techFit/apiFit/json/owndata
 
 
 # GET usuario por id
 curl -X GET http://localhost:8080/techFit/apiFit/usuarios/1
-curl -X GET http://localhost:8080/techFit/apiFit/habitos/
+
+curl -X GET http://localhost:8080/techFit/apiFit/usuarios/1/habitos
 curl -X GET http://localhost:8080/techFit/apiFit/habitos/1
 curl -X GET http://localhost:8080/techFit/apiFit/habitos/1/dias
 curl -X GET http://localhost:8080/techFit/apiFit/dias/1
 
 
 # POST
-curl -X POST -H "Content-Type: application/json" -d '{\"username\":\"Manolo\",\"password\":\"manolocom\",\"uid\":12,\"email\":\"manolo@es.com\",\"nombre\":\"Manolo\",\"apellido\":\"Garcia\"}' http://localhost:8080/techFit/apiFit/usuarios/
+>>usuario
+curl -X POST -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzNTE5MzIsImp0aSI6IlFrblNRZGttc1F6dGF3UW5xOVdKc2ciLCJpYXQiOjE1MDIzNDgzMzIsIm5iZiI6MTUwMjM0ODIxMiwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.ZbqepWZKhe_SVCOWuWtdLTu-QydzND_2gY_bz1LbMqR3I6p967zgAEW8DBpG7Qwgb8yl4WPnWVWiL7zKc-8F7nLrqXEpvY0T6UbM03bYM2_khgKI2PFvQcGzwApob52TeX5L-DJl2htR7lzDpfBpH3iL-8nDbkYRYLssJ4OIyBUDdPf9nFpSAVt8SVhIfP16vVTjkgSgkGfk7-utlOiI3h7Ev2T6zys6PIk8PWyWK1HIzueNNpU6MncEURt4YvchyDktQWoY1QRJd757pKq60PNTpjDMgnpmmAtxwgeJkp7_7KYZzz5spBRg-FPJIOGacJRtD8f6F8Sh6XIqZfHaoQ" -d {\"username\":\"mafalda\",\"password\":\"mafaldacom\",\"uid\":14,\"email\":\"mafalda@es.com\",\"nombre\":\"Mafalda\",\"apellido\":\"Quino\"} http://localhost:8080/techFit/apiFit/usuarios/
+>>habitos
+curl -X POST -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzNTE5MzIsImp0aSI6IlFrblNRZGttc1F6dGF3UW5xOVdKc2ciLCJpYXQiOjE1MDIzNDgzMzIsIm5iZiI6MTUwMjM0ODIxMiwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.ZbqepWZKhe_SVCOWuWtdLTu-QydzND_2gY_bz1LbMqR3I6p967zgAEW8DBpG7Qwgb8yl4WPnWVWiL7zKc-8F7nLrqXEpvY0T6UbM03bYM2_khgKI2PFvQcGzwApob52TeX5L-DJl2htR7lzDpfBpH3iL-8nDbkYRYLssJ4OIyBUDdPf9nFpSAVt8SVhIfP16vVTjkgSgkGfk7-utlOiI3h7Ev2T6zys6PIk8PWyWK1HIzueNNpU6MncEURt4YvchyDktQWoY1QRJd757pKq60PNTpjDMgnpmmAtxwgeJkp7_7KYZzz5spBRg-FPJIOGacJRtD8f6F8Sh6XIqZfHaoQ" -d {\"usuario\":1,\"hid\":14,\"descripcion\":\"beber cerveza\",\"fechaI\":\"2017-08-02\",\"titulo\":\"habito14\",\"progreso\":5,\"estado\":1,\"fechaF\":\"2017-10-31\"} http://localhost:8080/techFit/apiFit/habitos
+
+
 
 # PUT
-curl -X PUT -H "Content-Type: application/json" -d '{"estado":0,"titulo":"habito11","descripcion":"free diving","fechaI":"2017-09-17","fechaF":null,"progreso":0}' http://localhost:8080/techFit/apiFit/habitos/11
+>>habito
+curl -X PUT -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzMjMxMzEsImp0aSI6IlJtdEJlR0VNampYVEdsYzJMVzNkMmciLCJpYXQiOjE1MDIzMTk1MzEsIm5iZiI6MTUwMjMxOTQxMSwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.Qi6tX3EfNyoKN0blG5Uaw5Pn11OwEJoSl2wIY7bsWRD-BumeLN4AtoWvfy5KDanTXRoWI7eGkl5kkJAOB0lXcisRnhLXE2PMvf076axxmQuZJXNnTBX9E8NVCggDRpBIDVeOux7TBDUB1KLczW6mZlEnxyxvQ0IfBNXarL7p4mHE0yyFjgA7gGOWJRbCbq98D11tHW4Sm67jSViR6rYd4of8zwIzKzcEl7q-R33neb0zSjqbdS-x5k_tN7JBCe7zjDDBtOXJ_mRpf0M_2qkszJfU1Gf5w1IxcChH8QEPGjdN91o9BAEepDKKNbYhzADGuA6S5vNsX8I7RKu_9nqSRg" -d {\"usuario\":1,\"progreso\":4,\"descripcion\":\"salvar ballenas\",\"titulo\":\"habito3\",\"fechaF\":\"2017-10-31\",\"fechaI\":\"2017-08-02\",\"hid\":3,\"estado\":3} http://localhost:8080/techFit/apiFit/habitos/1
+>>usuario
+curl -X PUT -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzMjMxMzEsImp0aSI6IlJtdEJlR0VNampYVEdsYzJMVzNkMmciLCJpYXQiOjE1MDIzMTk1MzEsIm5iZiI6MTUwMjMxOTQxMSwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.Qi6tX3EfNyoKN0blG5Uaw5Pn11OwEJoSl2wIY7bsWRD-BumeLN4AtoWvfy5KDanTXRoWI7eGkl5kkJAOB0lXcisRnhLXE2PMvf076axxmQuZJXNnTBX9E8NVCggDRpBIDVeOux7TBDUB1KLczW6mZlEnxyxvQ0IfBNXarL7p4mHE0yyFjgA7gGOWJRbCbq98D11tHW4Sm67jSViR6rYd4of8zwIzKzcEl7q-R33neb0zSjqbdS-x5k_tN7JBCe7zjDDBtOXJ_mRpf0M_2qkszJfU1Gf5w1IxcChH8QEPGjdN91o9BAEepDKKNbYhzADGuA6S5vNsX8I7RKu_9nqSRg" -d {\"username\":\"Manolet\",\"password\":\"manolocom\",\"uid\":9,\"email\":\"manolo@es.com\",\"nombre\":\"Manolo\",\"apellido\":\"Garcia\"} http://localhost:8080/techFit/apiFit/usuarios/12
+>>dias
+curl -X PUT -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzMjMxMzEsImp0aSI6IlJtdEJlR0VNampYVEdsYzJMVzNkMmciLCJpYXQiOjE1MDIzMTk1MzEsIm5iZiI6MTUwMjMxOTQxMSwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.Qi6tX3EfNyoKN0blG5Uaw5Pn11OwEJoSl2wIY7bsWRD-BumeLN4AtoWvfy5KDanTXRoWI7eGkl5kkJAOB0lXcisRnhLXE2PMvf076axxmQuZJXNnTBX9E8NVCggDRpBIDVeOux7TBDUB1KLczW6mZlEnxyxvQ0IfBNXarL7p4mHE0yyFjgA7gGOWJRbCbq98D11tHW4Sm67jSViR6rYd4of8zwIzKzcEl7q-R33neb0zSjqbdS-x5k_tN7JBCe7zjDDBtOXJ_mRpf0M_2qkszJfU1Gf5w1IxcChH8QEPGjdN91o9BAEepDKKNbYhzADGuA6S5vNsX8I7RKu_9nqSRg" -d {"habito":1,"did":1,"diaSemana":"miercoles","estado":3,"fecha":"2017-07-31","fechaActual":"2017-07-31"} http://localhost:8080/techFit/apiFit/dias/1
+
+
 
 # DELETE
 
-curl -X DELETE http://localhost:8080/techFit/apiFit/usuarios/11
+curl -X DELETE -H "Content-Type: application/json" -H "token:eyJraWQiOiIxIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJ0ZWNoNS5jb20iLCJleHAiOjE1MDIzNTE5MzIsImp0aSI6IlFrblNRZGttc1F6dGF3UW5xOVdKc2ciLCJpYXQiOjE1MDIzNDgzMzIsIm5iZiI6MTUwMjM0ODIxMiwic3ViIjoiZGlhbmFAZXMuY29tIiwicm9sZXMiOlsiQWRtaW4iXX0.ZbqepWZKhe_SVCOWuWtdLTu-QydzND_2gY_bz1LbMqR3I6p967zgAEW8DBpG7Qwgb8yl4WPnWVWiL7zKc-8F7nLrqXEpvY0T6UbM03bYM2_khgKI2PFvQcGzwApob52TeX5L-DJl2htR7lzDpfBpH3iL-8nDbkYRYLssJ4OIyBUDdPf9nFpSAVt8SVhIfP16vVTjkgSgkGfk7-utlOiI3h7Ev2T6zys6PIk8PWyWK1HIzueNNpU6MncEURt4YvchyDktQWoY1QRJd757pKq60PNTpjDMgnpmmAtxwgeJkp7_7KYZzz5spBRg-FPJIOGacJRtD8f6F8Sh6XIqZfHaoQ" http://localhost:8080/techFit/apiFit/habitos/4
+
+

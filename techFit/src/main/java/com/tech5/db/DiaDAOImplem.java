@@ -1,6 +1,7 @@
 package com.tech5.db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.MessageFormat;
@@ -39,8 +40,7 @@ public class DiaDAOImplem extends DiaDAO {
 
 			while (rs.next()) {
 
-				dialistADevolver.add(
-						new Dia(
+				dialistADevolver.add(new Dia(
 								rs.getInt("did"), 
 								rs.getString("diaSemana"), 
 								rs.getDate("fechaActual"), 
@@ -95,19 +95,21 @@ public class DiaDAOImplem extends DiaDAO {
 	}
 
 	@Override
-	public boolean updateDia(Dia unDia) throws Exception {
+	public boolean updateDia(Dia updateDia) throws Exception {
 		boolean diaActualizado = false;
+		
 		PreparedStatement pstm = null;
 		Connection conn = this.datasource.getConnection();
 
 		// ordenes sql
-		String sql = "UPDATE techfit.dia SET diaSemana=?, fechaActual=?, estado=? WHERE dId=?";
-
+		String sql = "UPDATE techfit.dia d SET  d.fechaActual=?, d.estado=? WHERE d.dId=?";
+		
 		pstm = conn.prepareStatement(sql);
 
-		pstm.setString(1, unDia.getDiaSemana());
-		pstm.setDate(2, new java.sql.Date(unDia.getFecha().getTime())  );  //DateTime en java para SQL 
-		pstm.setInt(3, unDia.getEstado());
+		
+		pstm.setDate(1, (Date)updateDia.getFechaActual());  
+		pstm.setInt(2, updateDia.getEstado());
+		pstm.setInt(3, updateDia.getDid());
 		
 
 		pstm.executeUpdate();

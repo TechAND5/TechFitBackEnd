@@ -33,7 +33,7 @@ public class AuthService extends JSONService{
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response authenticateCredentials(@HeaderParam("username") String email,
+	public Response authenticateCredentials(@HeaderParam("email") String email,
 			@HeaderParam("password") String password)
 			throws JsonGenerationException, JsonMappingException, IOException {
 		logger.info("Authenticating User Credentials...:"+email+":"+password);
